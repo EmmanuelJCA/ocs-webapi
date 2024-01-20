@@ -41,7 +41,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
-DB_DATABASE=nest_template
+DB_DATABASE=ocs
 ```
 
 Some helper script to work with database
@@ -125,4 +125,4 @@ user: postgres
 pass: postgres
 ```
 
-create database `nest_template` and your application fully is ready to use.
+create database `ocs` and your application fully is ready to use.

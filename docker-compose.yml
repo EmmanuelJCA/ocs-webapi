@@ -3,7 +3,7 @@ services:
   app:
     env_file:
       - .env
-    container_name: nest-template
+    container_name: api
     restart: always
     build: .
     ports:

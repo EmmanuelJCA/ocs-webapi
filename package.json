@@ -1,7 +1,7 @@
 {
-  "name": "nest-template",
+  "name": "ocs-webapi",
   "version": "0.0.0",
-  "description": "Nest template based on github.com/NarHakobyan/awesome-nest-boilerplate",
+  "description": "Oncological Control System, the app for controlling cancer treatments and patients",
   "author": "Emmanuel Cañate <emmanuelcanate@gmail.com>",
   "private": true,
   "license": "MIT",
