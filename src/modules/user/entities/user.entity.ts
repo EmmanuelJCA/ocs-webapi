@@ -1,30 +1,42 @@
 import { Column, Entity, VirtualColumn } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { RoleType } from '../../../constants';
+import { Genre, RoleType } from '../../../constants';
 import { UseDto } from '../../../decorators';
-import { UserDto, type UserDtoOptions } from '../dtos/user.dto';
+import { UserDto } from '../dtos/user.dto';
 
 @Entity({ name: 'users' })
 @UseDto(UserDto)
-export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
-  @Column({ nullable: true, type: 'varchar' })
-  firstName!: string | null;
+export class UserEntity extends AbstractEntity<UserDto> {
+  @Column({ nullable: true, type: 'date' })
+  inactivatedAt!: Date | null;
 
-  @Column({ nullable: true, type: 'varchar' })
-  lastName!: string | null;
+  @Column({ type: 'varchar' })
+  firstName!: string;
 
-  @Column({ type: 'enum', enum: RoleType, default: RoleType.USER })
+  @Column({ type: 'varchar' })
+  lastName!: string;
+
+  @Column({ type: 'enum', enum: Genre })
+  genre!: Genre;
+
+  @Column({ unique: true, type: 'varchar' })
+  identification!: string;
+
+  @Column({ type: 'date' })
+  dateOfBirth!: Date;
+
+  @Column({ type: 'enum', enum: RoleType })
   role!: RoleType;
 
-  @Column({ unique: true, nullable: true, type: 'varchar' })
-  email!: string | null;
+  @Column({ unique: true, type: 'varchar' })
+  email!: string;
 
-  @Column({ nullable: true, type: 'varchar' })
-  password!: string | null;
+  @Column({ type: 'varchar' })
+  password!: string;
 
-  @Column({ nullable: true, type: 'varchar' })
-  phone!: string | null;
+  @Column({ unique: true, type: 'varchar' })
+  phone!: string;
 
   @Column({ nullable: true, type: 'varchar' })
   avatar!: string | null;

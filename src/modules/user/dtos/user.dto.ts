@@ -1,50 +1,63 @@
+import { Matches } from 'class-validator';
+
 import { AbstractDto } from '../../../common/dto/abstract.dto';
-import { RoleType } from '../../../constants';
+import { Genre, RoleType } from '../../../constants';
 import {
-  BooleanFieldOptional,
-  EmailFieldOptional,
-  EnumFieldOptional,
-  PhoneFieldOptional,
+  DateField,
+  EmailField,
+  EnumField,
+  PhoneField,
+  StringField,
   StringFieldOptional,
 } from '../../../decorators';
 import { type UserEntity } from '../entities/user.entity';
 
-// TODO, remove this class and use constructor's second argument's type
-export type UserDtoOptions = Partial<{ isActive: boolean }>;
-
 export class UserDto extends AbstractDto {
-  @StringFieldOptional({ nullable: true })
-  firstName?: string | null;
+  @DateField({ nullable: true })
+  inactivatedAt!: Date | null;
 
-  @StringFieldOptional({ nullable: true })
-  lastName?: string | null;
+  @StringField()
+  firstName!: string;
 
-  @StringFieldOptional({ nullable: true })
+  @StringField()
+  lastName!: string;
+
+  @StringField()
   username!: string;
 
-  @EnumFieldOptional(() => RoleType)
-  role?: RoleType;
+  @EnumField(() => Genre)
+  genre!: Genre;
 
-  @EmailFieldOptional({ nullable: true })
-  email?: string | null;
+  @StringFieldOptional()
+  @Matches(/[EGJPV]-\d{8}-\d/)
+  identification!: string;
+
+  @DateField()
+  dateOfBirth!: Date;
+
+  @EnumField(() => RoleType)
+  role!: RoleType;
+
+  @EmailField()
+  email!: string;
 
   @StringFieldOptional({ nullable: true })
   avatar?: string | null;
 
-  @PhoneFieldOptional({ nullable: true })
-  phone?: string | null;
+  @PhoneField()
+  phone!: string;
 
-  @BooleanFieldOptional()
-  isActive?: boolean;
-
-  constructor(user: UserEntity, options?: UserDtoOptions) {
+  constructor(user: UserEntity) {
     super(user);
+    this.inactivatedAt = user.inactivatedAt;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
+    this.genre = user.genre;
+    this.identification = user.identification;
+    this.dateOfBirth = user.dateOfBirth;
     this.role = user.role;
     this.email = user.email;
     this.avatar = user.avatar;
     this.phone = user.phone;
-    this.isActive = options?.isActive;
   }
 }

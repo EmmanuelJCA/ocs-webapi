@@ -42,10 +42,10 @@ export class AuthService {
       user?.password,
     );
 
-    if (!isPasswordValid) {
+    if (!isPasswordValid || user?.inactivatedAt !== null) {
       throw new UserNotFoundException();
     }
 
-    return user!;
+    return user;
   }
 }
