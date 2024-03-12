@@ -35,8 +35,8 @@ export class UserDto extends AbstractDto {
   @DateField()
   dateOfBirth!: Date;
 
-  @EnumField(() => RoleType)
-  role!: RoleType;
+  @EnumField(() => RoleType, { each: true })
+  roles!: RoleType[];
 
   @EmailField()
   email!: string;
@@ -55,7 +55,7 @@ export class UserDto extends AbstractDto {
     this.genre = user.genre;
     this.identification = user.identification;
     this.dateOfBirth = user.dateOfBirth;
-    this.role = user.role;
+    this.roles = user.roles;
     this.email = user.email;
     this.avatar = user.avatar;
     this.phone = user.phone;

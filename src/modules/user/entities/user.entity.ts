@@ -26,8 +26,8 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ type: 'date' })
   dateOfBirth!: Date;
 
-  @Column({ type: 'enum', enum: RoleType })
-  role!: RoleType;
+  @Column({ type: 'enum', enum: RoleType, array: true })
+  roles!: RoleType[];
 
   @Column({ unique: true, type: 'varchar' })
   email!: string;

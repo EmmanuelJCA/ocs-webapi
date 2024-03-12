@@ -1,6 +1,10 @@
 import { Matches, MaxDate, MinDate } from 'class-validator';
 
-import { Genre, RoleType, RoleTypeWithoutSuperAdmin } from '../../../constants';
+import {
+  Genre,
+  type RoleType,
+  RoleTypeWithoutSuperAdmin,
+} from '../../../constants';
 import {
   DateFieldOptional,
   EmailFieldOptional,
@@ -32,8 +36,8 @@ export class UpdateUserDto {
   @EnumFieldOptional(() => Genre)
   genre?: Genre;
 
-  @EnumFieldOptional(() => RoleTypeWithoutSuperAdmin)
-  role?: RoleType;
+  @EnumFieldOptional(() => RoleTypeWithoutSuperAdmin, { each: true })
+  roles?: RoleType[];
 
   @DateFieldOptional()
   @MinDate(
@@ -55,6 +59,6 @@ export class UpdateUserDto {
   @PhoneFieldOptional()
   phone?: string;
 
-  @DateFieldOptional()
+  @DateFieldOptional({ nullable: true })
   inactivatedAt?: Date | null = null;
 }

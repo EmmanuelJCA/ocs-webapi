@@ -30,6 +30,6 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    return roles.includes(user.role);
+    return user.roles.some((role) => roles.includes(role));
   }
 }

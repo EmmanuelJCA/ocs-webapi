@@ -1,6 +1,10 @@
 import { Matches, MaxDate, MinDate } from 'class-validator';
 
-import { Genre, RoleType, RoleTypeWithoutSuperAdmin } from '../../../constants';
+import {
+  Genre,
+  type RoleType,
+  RoleTypeWithoutSuperAdmin,
+} from '../../../constants';
 import {
   DateField,
   EmailField,
@@ -32,8 +36,8 @@ export class CreateUserDto {
   @EnumField(() => Genre)
   genre!: Genre;
 
-  @EnumField(() => RoleTypeWithoutSuperAdmin)
-  role!: RoleType;
+  @EnumField(() => RoleTypeWithoutSuperAdmin, { each: true })
+  roles!: RoleType[];
 
   @DateField()
   @MinDate(
