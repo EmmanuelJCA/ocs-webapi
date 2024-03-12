@@ -9,6 +9,7 @@ import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { OncologyCenterModule } from './modules/oncology-center/oncology-center.module';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -17,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     AuthModule,
     UserModule,
+    OncologyCenterModule,
     ClsModule.forRoot({
       global: true,
       middleware: {

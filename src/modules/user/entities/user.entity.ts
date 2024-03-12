@@ -1,8 +1,9 @@
-import { Column, Entity, VirtualColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, VirtualColumn } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Genre, RoleType } from '../../../constants';
 import { UseDto } from '../../../decorators';
+import { OncologyCenterEntity } from '../../oncology-center/entities/oncology-center.entity';
 import { UserDto } from '../dtos/user.dto';
 
 @Entity({ name: 'users' })
@@ -46,4 +47,18 @@ export class UserEntity extends AbstractEntity<UserDto> {
       `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
   })
   fullName!: string;
+
+  @ManyToMany(
+    () => OncologyCenterEntity,
+    (oncologyCenter) => oncologyCenter.users,
+  )
+  @JoinTable({
+    name: 'users_oncology_centers',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'oncology_center_id',
+      referencedColumnName: 'id',
+    },
+  })
+  oncologyCenters!: OncologyCenterEntity[];
 }
