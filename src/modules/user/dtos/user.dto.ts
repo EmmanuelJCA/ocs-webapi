@@ -3,6 +3,7 @@ import { Matches } from 'class-validator';
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { Genre, RoleType } from '../../../constants';
 import {
+  ClassField,
   DateField,
   EmailField,
   EnumField,
@@ -10,6 +11,7 @@ import {
   StringField,
   StringFieldOptional,
 } from '../../../decorators';
+import { OncologyCenterDto } from '../../oncology-center/dtos/oncology-center.dto';
 import { type UserEntity } from '../entities/user.entity';
 
 export class UserDto extends AbstractDto {
@@ -21,9 +23,6 @@ export class UserDto extends AbstractDto {
 
   @StringField()
   lastName!: string;
-
-  @StringField()
-  username!: string;
 
   @EnumField(() => Genre)
   genre!: Genre;
@@ -47,6 +46,9 @@ export class UserDto extends AbstractDto {
   @PhoneField()
   phone!: string;
 
+  @ClassField(() => OncologyCenterDto, { isArray: true })
+  oncologyCenters?: OncologyCenterDto[];
+
   constructor(user: UserEntity) {
     super(user);
     this.inactivatedAt = user.inactivatedAt;
@@ -59,5 +61,6 @@ export class UserDto extends AbstractDto {
     this.email = user.email;
     this.avatar = user.avatar;
     this.phone = user.phone;
+    this.oncologyCenters = user.oncologyCenters;
   }
 }

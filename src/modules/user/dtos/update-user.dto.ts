@@ -12,6 +12,7 @@ import {
   PasswordFieldOptional,
   PhoneFieldOptional,
   StringFieldOptional,
+  UUIDFieldOptional,
 } from '../../../decorators';
 
 const currentDate = new Date();
@@ -61,4 +62,7 @@ export class UpdateUserDto {
 
   @DateFieldOptional({ nullable: true })
   inactivatedAt?: Date | null = null;
+
+  @UUIDFieldOptional({ each: true, minLength: 1 })
+  oncologyCentersIds!: string[];
 }

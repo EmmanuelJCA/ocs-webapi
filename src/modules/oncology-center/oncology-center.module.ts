@@ -7,6 +7,7 @@ import { OncologyCenterService } from './oncology-center.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OncologyCenterEntity])],
+  exports: [OncologyCenterService],
   providers: [OncologyCenterService],
   controllers: [OncologyCenterController],
 })

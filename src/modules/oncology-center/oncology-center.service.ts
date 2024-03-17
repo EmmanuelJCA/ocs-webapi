@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { type CreateOncologyCenterDto } from './dtos/create-oncology-center.dto';
 import { type UpdateOncologyCenterDto } from './dtos/update-oncology-center.dto';
@@ -24,6 +24,10 @@ export class OncologyCenterService {
     await this.oncologyCenterRepository.save(oncologyCenterEntity);
 
     return oncologyCenterEntity;
+  }
+
+  async getOncologyCentersByIds(ids: Uuid[]): Promise<OncologyCenterEntity[]> {
+    return this.oncologyCenterRepository.findBy({ id: In(ids) });
   }
 
   async getOncologyCenters(): Promise<OncologyCenterEntity[]> {

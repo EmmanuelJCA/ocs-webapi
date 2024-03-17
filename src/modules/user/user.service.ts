@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsWhere, Repository } from 'typeorm';
 
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
 import { type IFile } from '../../interfaces/file';
+import { OncologyCenterService } from '../../modules/oncology-center/oncology-center.service';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { type CreateUserDto } from './dtos/create-user.dto';
@@ -15,6 +16,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private oncologyCenterService: OncologyCenterService,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
   ) {}
@@ -23,7 +25,7 @@ export class UserService {
     return this.userRepository.findOneBy(findData);
   }
 
-  async findByUsernameOrEmail(
+  async findByEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository
@@ -33,12 +35,6 @@ export class UserService {
     if (options.email) {
       queryBuilder.orWhere('user.email = :email', {
         email: options.email,
-      });
-    }
-
-    if (options.username) {
-      queryBuilder.orWhere('user.username = :username', {
-        username: options.username,
       });
     }
 
@@ -53,7 +49,18 @@ export class UserService {
       throw new FileNotImageException();
     }
 
+    const oncologyCenters =
+      await this.oncologyCenterService.getOncologyCentersByIds(
+        createUserDto.oncologyCentersIds,
+      );
+
+    if (oncologyCenters.length !== createUserDto.oncologyCentersIds.length) {
+      throw new BadRequestException();
+    }
+
     const userEntity = this.userRepository.create(createUserDto);
+
+    userEntity.oncologyCenters = oncologyCenters;
 
     if (file) {
       userEntity.avatar = await this.awsS3Service.uploadImage(file);
@@ -65,12 +72,17 @@ export class UserService {
   }
 
   async getUsers(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    queryBuilder.leftJoinAndSelect('user.oncologyCenters', 'oncologyCenters');
+
+    return queryBuilder.getMany();
   }
 
   async getUser(userId: Uuid): Promise<UserEntity> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
+    queryBuilder.leftJoinAndSelect('user.oncologyCenters', 'oncologyCenters');
     queryBuilder.where('user.id = :userId', { userId });
 
     const userEntity = await queryBuilder.getOne();
