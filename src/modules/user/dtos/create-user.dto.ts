@@ -12,6 +12,7 @@ import {
   PasswordField,
   PhoneField,
   StringField,
+  UUIDField,
 } from '../../../decorators';
 
 const currentDate = new Date();
@@ -58,4 +59,7 @@ export class CreateUserDto {
 
   @PhoneField()
   phone!: string;
+
+  @UUIDField({ each: true, minLength: 1 })
+  oncologyCentersIds!: Uuid[];
 }
