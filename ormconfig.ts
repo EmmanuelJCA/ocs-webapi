@@ -15,6 +15,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
+  ssl: process.env.DB_SSL === 'true',
   namingStrategy: new SnakeNamingStrategy(),
   subscribers: [UserSubscriber],
   entities: [
