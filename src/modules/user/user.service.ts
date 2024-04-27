@@ -1,46 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
 import { type FindOptionsWhere, Repository } from 'typeorm';
-import { Transactional } from 'typeorm-transactional';
 
-import { type PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import { IFile } from '../../interfaces/file';
+import { type IFile } from '../../interfaces/file';
+import { OncologyCenterService } from '../../modules/oncology-center/oncology-center.service';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
-import { UserSignUpDto } from '../auth/dto/user-sign-up.dto';
-import { CreateSettingsCommand } from './commands/create-settings.command';
-import { CreateSettingsDto } from './dtos/create-settings.dto';
-import { type UserDto } from './dtos/user.dto';
-import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
+import { type CreateUserDto } from './dtos/create-user.dto';
+import { type UpdateUserDto } from './dtos/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { type UserSettingsEntity } from './entities/user-settings.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private oncologyCenterService: OncologyCenterService,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
-    private commandBus: CommandBus,
   ) {}
 
-  /**
-   * Find single user
-   */
   findOne(findData: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
     return this.userRepository.findOneBy(findData);
   }
 
-  async findByUsernameOrEmail(
+  async findByEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect<UserEntity, 'user'>('user.settings', 'settings');
+      .select();
 
     if (options.email) {
       queryBuilder.orWhere('user.email = :email', {
@@ -48,55 +38,51 @@ export class UserService {
       });
     }
 
-    if (options.username) {
-      queryBuilder.orWhere('user.username = :username', {
-        username: options.username,
-      });
-    }
-
     return queryBuilder.getOne();
   }
 
-  @Transactional()
   async createUser(
-    userSignUpDto: UserSignUpDto,
+    createUserDto: CreateUserDto,
     file?: IFile,
   ): Promise<UserEntity> {
-    const user = this.userRepository.create(userSignUpDto);
-
     if (file && !this.validatorService.isImage(file.mimetype)) {
       throw new FileNotImageException();
     }
 
-    if (file) {
-      user.avatar = await this.awsS3Service.uploadImage(file);
+    const oncologyCenters =
+      await this.oncologyCenterService.getOncologyCentersByIds(
+        createUserDto.oncologyCentersIds,
+      );
+
+    if (oncologyCenters.length !== createUserDto.oncologyCentersIds.length) {
+      throw new BadRequestException();
     }
 
-    await this.userRepository.save(user);
+    const userEntity = this.userRepository.create(createUserDto);
 
-    user.settings = await this.createSettings(
-      user.id,
-      plainToClass(CreateSettingsDto, {
-        isEmailVerified: false,
-        isPhoneVerified: false,
-      }),
-    );
+    userEntity.oncologyCenters = oncologyCenters;
 
-    return user;
+    if (file) {
+      userEntity.avatar = await this.awsS3Service.uploadImage(file);
+    }
+
+    await this.userRepository.save(userEntity);
+
+    return userEntity;
   }
 
-  async getUsers(
-    pageOptionsDto: UsersPageOptionsDto,
-  ): Promise<PageDto<UserDto>> {
+  async getUsers(): Promise<UserEntity[]> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
-    return items.toPageDto(pageMetaDto);
+    queryBuilder.leftJoinAndSelect('user.oncologyCenters', 'oncologyCenters');
+
+    return queryBuilder.getMany();
   }
 
-  async getUser(userId: Uuid): Promise<UserDto> {
+  async getUser(userId: Uuid): Promise<UserEntity> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
+    queryBuilder.leftJoinAndSelect('user.oncologyCenters', 'oncologyCenters');
     queryBuilder.where('user.id = :userId', { userId });
 
     const userEntity = await queryBuilder.getOne();
@@ -105,15 +91,34 @@ export class UserService {
       throw new UserNotFoundException();
     }
 
-    return userEntity.toDto();
+    return userEntity;
   }
 
-  async createSettings(
-    userId: Uuid,
-    createSettingsDto: CreateSettingsDto,
-  ): Promise<UserSettingsEntity> {
-    return this.commandBus.execute<CreateSettingsCommand, UserSettingsEntity>(
-      new CreateSettingsCommand(userId, createSettingsDto),
-    );
+  async updateUser(
+    id: Uuid,
+    updateUserDto: UpdateUserDto,
+    file?: IFile,
+  ): Promise<UserEntity> {
+    const userEntity = await this.getUser(id);
+
+    this.userRepository.merge(userEntity, updateUserDto);
+
+    if (file) {
+      userEntity.avatar = await this.awsS3Service.uploadImage(file);
+    }
+
+    await this.userRepository.save(userEntity);
+
+    return userEntity;
+  }
+
+  async inactivateUser(userId: Uuid): Promise<UserEntity> {
+    const userEntity = await this.getUser(userId);
+
+    userEntity.inactivatedAt = new Date();
+
+    await this.userRepository.save(userEntity);
+
+    return userEntity;
   }
 }

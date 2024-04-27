@@ -7,7 +7,7 @@
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable</p>
 
-# Nest Template
+# Oncological Control System
 
 ## Environment Variables
 1. Clone the .env.template file and rename it to .env.
