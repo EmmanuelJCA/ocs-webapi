@@ -6,6 +6,7 @@ import {
   RoleTypeWithoutSuperAdmin,
 } from '../../../constants';
 import {
+  BooleanFieldOptional,
   DateFieldOptional,
   EmailFieldOptional,
   EnumFieldOptional,
@@ -60,8 +61,10 @@ export class UpdateUserDto {
   @PhoneFieldOptional()
   phone?: string;
 
-  @DateFieldOptional({ nullable: true })
-  inactivatedAt?: Date | null = null;
+  @BooleanFieldOptional()
+  isActive?: boolean;
+
+  inactivatedAt?: Date | null = this.isActive ? null : new Date();
 
   @UUIDFieldOptional({ each: true, minLength: 1 })
   oncologyCentersIds!: string[];

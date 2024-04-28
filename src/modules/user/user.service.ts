@@ -96,10 +96,14 @@ export class UserService {
 
   async updateUser(
     id: Uuid,
-    updateUserDto: UpdateUserDto,
+    { isActive, ...updateUserDto }: UpdateUserDto,
     file?: IFile,
   ): Promise<UserEntity> {
     const userEntity = await this.getUser(id);
+
+    if (isActive !== undefined) {
+      updateUserDto.inactivatedAt = isActive ? null : new Date();
+    }
 
     this.userRepository.merge(userEntity, updateUserDto);
 
