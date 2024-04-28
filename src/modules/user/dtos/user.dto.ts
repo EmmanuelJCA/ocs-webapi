@@ -8,6 +8,7 @@ import {
   EmailField,
   EnumField,
   PhoneField,
+  S3UrlParser,
   StringField,
   StringFieldOptional,
 } from '../../../decorators';
@@ -41,6 +42,7 @@ export class UserDto extends AbstractDto {
   email!: string;
 
   @StringFieldOptional({ nullable: true })
+  @S3UrlParser()
   avatar?: string | null;
 
   @PhoneField()
