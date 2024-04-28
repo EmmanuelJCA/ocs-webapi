@@ -14,7 +14,7 @@ export class GeneratorProvider {
       throw new TypeError('key is required');
     }
 
-    return `https://s3.${process.env.AWS_S3_BUCKET_NAME_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${key}`;
+    return `https://s3.${process.env.AWS_S3_BUCKET_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${key}`;
   }
 
   static getS3Key(publicUrl: string): string {

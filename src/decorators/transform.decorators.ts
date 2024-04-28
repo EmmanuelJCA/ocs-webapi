@@ -140,6 +140,10 @@ export function S3UrlParser(): PropertyDecorator {
   return Transform((params) => {
     const key = params.value as string;
 
+    if (!key) {
+      return key;
+    }
+
     switch (params.type) {
       case TransformationType.CLASS_TO_PLAIN: {
         return GeneratorProvider.getS3PublicUrl(key);
