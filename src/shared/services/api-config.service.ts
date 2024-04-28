@@ -12,18 +12,6 @@ import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 export class ApiConfigService {
   constructor(private configService: ConfigService) {}
 
-  get isDevelopment(): boolean {
-    return this.nodeEnv === 'development';
-  }
-
-  get isProduction(): boolean {
-    return this.nodeEnv === 'production';
-  }
-
-  get isTest(): boolean {
-    return this.nodeEnv === 'test';
-  }
-
   private getNumber(key: string): number {
     const value = this.get(key);
 
@@ -59,10 +47,6 @@ export class ApiConfigService {
     const value = this.get(key);
 
     return value.replaceAll('\\n', '\n');
-  }
-
-  get nodeEnv(): string {
-    return this.getString('NODE_ENV');
   }
 
   get throttlerConfigs(): ThrottlerOptions {
