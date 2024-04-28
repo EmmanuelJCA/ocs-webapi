@@ -91,6 +91,13 @@ export class ApiConfigService {
       username: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
       database: this.getString('DB_DATABASE'),
+      ssl:
+        this.getBoolean('DB_SSL') && this.getString('DB_SSL_CA')
+          ? {
+              rejectUnauthorized: true,
+              ca: this.getString('DB_SSL_CA'),
+            }
+          : false,
       subscribers: [UserSubscriber],
       migrationsRun: true,
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
