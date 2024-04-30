@@ -96,7 +96,7 @@ export class UserService {
 
   async updateUser(
     id: Uuid,
-    { isActive, oncologyCentersIds, ...updateUserDto }: UpdateUserDto,
+    { isActive, oncologyCentersIds = [], ...updateUserDto }: UpdateUserDto,
     file?: IFile,
   ): Promise<UserEntity> {
     const userEntity = await this.getUser(id);

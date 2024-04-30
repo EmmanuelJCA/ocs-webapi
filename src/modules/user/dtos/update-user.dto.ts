@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { Matches, MaxDate, MinDate } from 'class-validator';
 
 import {
@@ -38,6 +39,7 @@ export class UpdateUserDto {
   @EnumFieldOptional(() => Genre)
   genre?: Genre;
 
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
   @EnumFieldOptional(() => RoleTypeWithoutSuperAdmin, { each: true })
   roles?: RoleType[];
 
@@ -66,6 +68,7 @@ export class UpdateUserDto {
 
   inactivatedAt?: Date | null = this.isActive ? null : new Date();
 
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
   @UUIDFieldOptional({ each: true, minLength: 1 })
   oncologyCentersIds!: Uuid[];
 }
