@@ -96,7 +96,7 @@ export class UserService {
 
   async updateUser(
     id: Uuid,
-    { isActive, ...updateUserDto }: UpdateUserDto,
+    { isActive, oncologyCentersIds, ...updateUserDto }: UpdateUserDto,
     file?: IFile,
   ): Promise<UserEntity> {
     const userEntity = await this.getUser(id);
@@ -105,7 +105,15 @@ export class UserService {
       updateUserDto.inactivatedAt = isActive ? null : new Date();
     }
 
-    this.userRepository.merge(userEntity, updateUserDto);
+    const oncologyCenters =
+      await this.oncologyCenterService.getOncologyCentersByIds(
+        oncologyCentersIds,
+      );
+
+    this.userRepository.merge(userEntity, {
+      ...updateUserDto,
+      oncologyCenters,
+    });
 
     if (file) {
       userEntity.avatar = await this.awsS3Service.uploadImage(file);

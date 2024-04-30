@@ -67,5 +67,5 @@ export class UpdateUserDto {
   inactivatedAt?: Date | null = this.isActive ? null : new Date();
 
   @UUIDFieldOptional({ each: true, minLength: 1 })
-  oncologyCentersIds!: string[];
+  oncologyCentersIds!: Uuid[];
 }
