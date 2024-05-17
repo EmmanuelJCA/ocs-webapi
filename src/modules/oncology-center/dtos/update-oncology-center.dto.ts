@@ -1,5 +1,5 @@
 import {
-  DateFieldOptional,
+  BooleanFieldOptional,
   EmailFieldOptional,
   PhoneFieldOptional,
   StringFieldOptional,
@@ -15,6 +15,8 @@ export class UpdateOncologyCenterDto {
   @EmailFieldOptional()
   email?: string;
 
-  @DateFieldOptional({ nullable: true })
-  inactivatedAt?: Date | null;
+  @BooleanFieldOptional()
+  isActive?: boolean;
+
+  inactivatedAt?: Date | null = this.isActive ? null : new Date();
 }

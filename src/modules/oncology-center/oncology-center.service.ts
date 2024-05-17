@@ -48,9 +48,13 @@ export class OncologyCenterService {
 
   async updateOncologyCenter(
     id: Uuid,
-    updateOncologyCenterDto: UpdateOncologyCenterDto,
+    { isActive, ...updateOncologyCenterDto }: UpdateOncologyCenterDto,
   ): Promise<OncologyCenterEntity> {
     const oncologyCenterEntity = await this.getOncologyCenter(id);
+
+    if (isActive !== undefined) {
+      updateOncologyCenterDto.inactivatedAt = isActive ? null : new Date();
+    }
 
     this.oncologyCenterRepository.merge(
       oncologyCenterEntity,
