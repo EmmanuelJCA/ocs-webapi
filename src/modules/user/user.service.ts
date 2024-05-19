@@ -110,10 +110,9 @@ export class UserService {
         oncologyCentersIds,
       );
 
-    this.userRepository.merge(userEntity, {
-      ...updateUserDto,
-      oncologyCenters,
-    });
+    userEntity.oncologyCenters = oncologyCenters;
+
+    this.userRepository.merge(userEntity, updateUserDto);
 
     if (file) {
       userEntity.avatar = await this.awsS3Service.uploadImage(file);
