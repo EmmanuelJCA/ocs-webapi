@@ -1,9 +1,8 @@
-import { Matches } from 'class-validator';
+import { Matches, ValidateNested } from 'class-validator';
 
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { Genre, RoleType } from '../../../constants';
 import {
-  ClassField,
   DateField,
   EmailField,
   EnumField,
@@ -14,6 +13,8 @@ import {
 } from '../../../decorators';
 import { OncologyCenterDto } from '../../oncology-center/dtos/oncology-center.dto';
 import { type UserEntity } from '../entities/user.entity';
+import { Type } from 'class-transformer';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 
 export class UserDto extends AbstractDto {
   @DateField({ nullable: true })
@@ -48,8 +49,10 @@ export class UserDto extends AbstractDto {
   @PhoneField()
   phone!: string;
 
-  @ClassField(() => OncologyCenterDto, { isArray: true })
-  oncologyCenters?: OncologyCenterDto[];
+  @ApiProperty({ type: () => [OmitType(OncologyCenterDto, ['users'] as const)] })
+  @Type(() => OmitType(OncologyCenterDto, ['users'] as const))
+  @ValidateNested()
+  oncologyCenters?: Omit<OncologyCenterDto, 'users'>[];
 
   constructor(user: UserEntity) {
     super(user);

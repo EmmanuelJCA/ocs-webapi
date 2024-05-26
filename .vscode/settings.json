@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "user-management"
+        "user-management",
+        "oncology-center"
     ]
 }

@@ -34,9 +34,28 @@ export class OncologyCenterService {
     return this.oncologyCenterRepository.find();
   }
 
+  async getOncologyCentersUsers(): Promise<OncologyCenterEntity[]> {
+    return this.oncologyCenterRepository.find({
+      relations: ['users'],
+    });
+  }
+
   async getOncologyCenter(id: Uuid): Promise<OncologyCenterEntity> {
-    const oncologyCenterEntity = await this.oncologyCenterRepository.findOneBy({
-      id,
+    const oncologyCenterEntity = await this.oncologyCenterRepository.findOne({
+      where: { id },
+    });
+
+    if (!oncologyCenterEntity) {
+      throw new OncologyCenterNotFoundException();
+    }
+
+    return oncologyCenterEntity;
+  }
+
+  async getOncologyCenterUsers(id: Uuid): Promise<OncologyCenterEntity> {
+    const oncologyCenterEntity = await this.oncologyCenterRepository.findOne({
+      where: { id },
+      relations: ['users'],
     });
 
     if (!oncologyCenterEntity) {

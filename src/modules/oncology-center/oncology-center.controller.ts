@@ -13,6 +13,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
+  OmitType,
 } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
@@ -45,10 +46,21 @@ export class OncologyCenterController {
   @Get()
   @Auth([])
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: [OncologyCenterDto] })
-  async getOncologyCenters(): Promise<OncologyCenterDto[]> {
+  @ApiOkResponse({ type: [OmitType(OncologyCenterDto, ['users'] as const)] })
+  async getOncologyCenters(): Promise<Omit<OncologyCenterDto, 'users'>[]> {
     const oncologyCenters =
       await this.oncologyCenterService.getOncologyCenters();
+
+    return oncologyCenters.toDtos();
+  }
+
+  @Get('/users')
+  @Auth([])
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: [OncologyCenterDto] })
+  async getOncologyCentersUsers(): Promise<OncologyCenterDto[]> {
+    const oncologyCenters =
+      await this.oncologyCenterService.getOncologyCentersUsers();
 
     return oncologyCenters.toDtos();
   }
@@ -56,12 +68,25 @@ export class OncologyCenterController {
   @Get(':id')
   @Auth([])
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: OncologyCenterDto })
+  @ApiOkResponse({ type: OmitType(OncologyCenterDto, ['users'] as const) })
   async getOncologyCenter(
+    @UUIDParam('id') id: Uuid,
+  ): Promise<Omit<OncologyCenterDto, 'users'>> {
+    const oncologyCenterEntity =
+      await this.oncologyCenterService.getOncologyCenter(id);
+
+    return oncologyCenterEntity.toDto();
+  }
+
+  @Get(':id/users')
+  @Auth([])
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: OncologyCenterDto })
+  async getOncologyCenterUsers(
     @UUIDParam('id') id: Uuid,
   ): Promise<OncologyCenterDto> {
     const oncologyCenterEntity =
-      await this.oncologyCenterService.getOncologyCenter(id);
+      await this.oncologyCenterService.getOncologyCenterUsers(id);
 
     return oncologyCenterEntity.toDto();
   }
