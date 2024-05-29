@@ -1,10 +1,11 @@
-import { Column, Entity, JoinTable, ManyToMany, VirtualColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { Genre, RoleType } from '../../../constants';
+import { RoleType } from '../../../constants';
 import { UseDto } from '../../../decorators';
 import { OncologyCenterEntity } from '../../oncology-center/entities/oncology-center.entity';
 import { UserDto } from '../dtos/user.dto';
+import { PersonEntity } from '../../person/entities/person.entity';
 
 @Entity({ name: 'users' })
 @UseDto(UserDto)
@@ -12,41 +13,25 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ nullable: true, type: 'date' })
   inactivatedAt!: Date | null;
 
-  @Column({ type: 'varchar' })
-  firstName!: string;
-
-  @Column({ type: 'varchar' })
-  lastName!: string;
-
-  @Column({ type: 'enum', enum: Genre })
-  genre!: Genre;
-
-  @Column({ unique: true, type: 'varchar' })
-  identification!: string;
-
-  @Column({ type: 'date' })
-  dateOfBirth!: Date;
-
-  @Column({ type: 'enum', enum: RoleType, array: true })
-  roles!: RoleType[];
-
   @Column({ unique: true, type: 'varchar' })
   email!: string;
 
   @Column({ type: 'varchar' })
   password!: string;
 
-  @Column({ unique: true, type: 'varchar' })
-  phone!: string;
+  @Column({ type: 'enum', enum: RoleType, array: true })
+  roles!: RoleType[];
 
   @Column({ nullable: true, type: 'varchar' })
   avatar!: string | null;
 
-  @VirtualColumn({
-    query: (alias) =>
-      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
-  })
-  fullName!: string;
+  @OneToOne(
+    () => PersonEntity,
+    person => person.user,
+    { eager: true, nullable: false, cascade: true }
+  )
+  @JoinColumn({ name: 'person_id' })
+  person!: PersonEntity;
 
   @ManyToMany(
     () => OncologyCenterEntity,

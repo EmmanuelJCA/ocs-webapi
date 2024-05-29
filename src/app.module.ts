@@ -13,11 +13,13 @@ import { OncologyCenterModule } from './modules/oncology-center/oncology-center.
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { PersonModule } from './modules/person/person.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
+    PersonModule,
     OncologyCenterModule,
     ClsModule.forRoot({
       global: true,
