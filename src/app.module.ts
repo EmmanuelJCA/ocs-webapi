@@ -15,10 +15,12 @@ import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { PersonModule } from './modules/person/person.module';
 import { PatientModule } from './modules/patient/patient.module';
+import { DepartmentModule } from './modules/department/department.module';
 
 @Module({
   imports: [
     AuthModule,
+    DepartmentModule,
     UserModule,
     PersonModule,
     PatientModule,

@@ -1,6 +1,6 @@
 import { Matches, MinDate, MaxDate } from 'class-validator';
 import { Genre } from '../../../constants';
-import { StringFieldOptional, EnumFieldOptional, DateFieldOptional, PhoneFieldOptional } from 'decorators';
+import { StringFieldOptional, EnumFieldOptional, DateFieldOptional, PhoneFieldOptional } from '../../../decorators';
 
 const currentDate = new Date();
 
