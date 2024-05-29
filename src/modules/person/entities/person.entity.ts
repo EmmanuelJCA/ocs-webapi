@@ -5,6 +5,7 @@ import { UseDto } from '../../../decorators';
 import { PersonDto } from '../dtos/person.dto';
 import { Genre } from '../../../constants';
 import { UserEntity } from '../../user/entities/user.entity';
+import { PatientEntity } from '../../patient/entities/patient.entity';
 
 @Entity({ name: 'persons' })
 @UseDto(PersonDto)
@@ -35,4 +36,7 @@ export class PersonEntity extends AbstractEntity<PersonDto> {
 
   @OneToOne(() => UserEntity, user => user.person, { nullable: false })
   user!: UserEntity;
+
+  @OneToOne(() => PatientEntity, patient => patient.person, { nullable: false })
+  patient!: PatientEntity;
 }

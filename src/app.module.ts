@@ -14,12 +14,14 @@ import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { PersonModule } from './modules/person/person.module';
+import { PatientModule } from './modules/patient/patient.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
     PersonModule,
+    PatientModule,
     OncologyCenterModule,
     ClsModule.forRoot({
       global: true,
