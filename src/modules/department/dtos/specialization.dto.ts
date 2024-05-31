@@ -1,12 +1,12 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { StringField } from '../../../decorators';
-import { SpecializationEntity } from '../entities';
+import { PhysicianSpecializationEntity, PhysicianSupportSpecializationEntity } from '../entities';
 
 export class SpecializationDto extends AbstractDto {
   @StringField()
   name!: string;
 
-  constructor(specialization: SpecializationEntity) {
+  constructor(specialization: PhysicianSpecializationEntity | PhysicianSupportSpecializationEntity) {
     super(specialization);
     this.name = specialization.name;
   }

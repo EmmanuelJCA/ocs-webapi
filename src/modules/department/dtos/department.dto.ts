@@ -8,11 +8,15 @@ export class DepartmentDto extends AbstractDto {
   name!: string;
 
   @ClassField(() => SpecializationDto)
-  specializations!: SpecializationDto[];
+  physicianSpecializations!: SpecializationDto[];
+
+  @ClassField(() => SpecializationDto)
+  physicianSupportSpecialization!: SpecializationDto[];
 
   constructor(department: DepartmentEntity) {
     super(department);
     this.name = department.name;
-    this.specializations = department.specializations
+    this.physicianSpecializations = department.physicianSpecializations;
+    this.physicianSupportSpecialization = department.physicianSupportSpecialization;
   }
 }

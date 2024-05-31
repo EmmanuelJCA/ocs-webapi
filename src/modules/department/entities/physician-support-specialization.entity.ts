@@ -4,15 +4,15 @@ import { AbstractEntity } from '../../../common/abstract.entity';
 import { SpecializationDto } from '../dtos';
 import { DepartmentEntity } from './department.entity';
 
-@Entity({ name: 'specializations' })
+@Entity({ name: 'physician_support_specializations' })
 @UseDto(SpecializationDto)
-export class SpecializationEntity extends AbstractEntity<SpecializationDto> {
+export class PhysicianSupportSpecializationEntity extends AbstractEntity<SpecializationDto> {
   @Column({ unique: true, type: 'varchar' })
   name!: string;
 
   @ManyToOne(
     () => DepartmentEntity,
-    department => department.specializations
+    department => department.physicianSupportSpecialization
   )
   @JoinColumn({ name: 'department_id' })
   department!: DepartmentEntity;
