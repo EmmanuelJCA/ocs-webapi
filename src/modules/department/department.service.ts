@@ -1,13 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DepartmentEntity } from './entities';
-import { Repository } from 'typeorm';
+import { DepartmentEntity, PhysicianSpecializationEntity } from './entities';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class DepartmentService {
   constructor(
     @InjectRepository(DepartmentEntity)
     private departmentRepository: Repository<DepartmentEntity>,
+    @InjectRepository(PhysicianSpecializationEntity)
+    private physicianSpecializationRepository: Repository<PhysicianSpecializationEntity>,
   ) {}
 
   async findAll(): Promise<DepartmentEntity[]> {
@@ -22,5 +24,9 @@ export class DepartmentService {
     }
 
     return departmentEntity;
+  }
+
+  async findSpecializationsByIds(ids: Uuid[]): Promise<PhysicianSpecializationEntity[]> {
+    return this.physicianSpecializationRepository.findBy({ id: In(ids) });
   }
 }

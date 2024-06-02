@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { UseDto } from '../../../decorators';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { SpecializationDto } from '../dtos';
 import { DepartmentEntity } from './department.entity';
+import { PhysicianEntity } from '../../physician/entities/physician.entity';
 
 @Entity({ name: 'physician_specialization' })
 @UseDto(SpecializationDto)
@@ -10,11 +11,19 @@ export class PhysicianSpecializationEntity extends AbstractEntity<Specialization
   @Column({ unique: true, type: 'varchar' })
   name!: string;
 
-  // @ManyToMany(
-  //   () => PhysicianEntity,
-  //   physician => physician.specializations
-  // )
-  // physicians!: PhysicianEntity[];
+  @ManyToMany(
+    () => PhysicianEntity,
+    physician => physician.physicianSpecialization,
+  )
+  @JoinTable({
+    name: 'physicians_specializations_physicians',
+    joinColumn: { name: 'physician_specialization_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'physician_id',
+      referencedColumnName: 'id',
+    },
+  })
+  physicians!: PhysicianEntity[];
 
   @ManyToOne(
     () => DepartmentEntity,

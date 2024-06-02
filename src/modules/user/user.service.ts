@@ -32,7 +32,22 @@ export class UserService {
   async createUser(
     { email, password, roles, oncologyCentersIds, ...personalInfo }: CreateUserDto,
     file?: IFile,
+    returnExisting = false,
   ): Promise<UserEntity> {
+    if (returnExisting) {
+      const existingUser = await this.userRepository.findOne({
+        relations: ['person'],
+        where: {
+          email,
+          person: {
+            identification: personalInfo.identification
+          }
+        },
+      });
+
+      if (existingUser) return existingUser;
+    }
+
     if (file && !this.validatorService.isImage(file.mimetype)) {
       throw new FileNotImageException();
     }
