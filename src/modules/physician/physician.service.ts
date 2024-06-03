@@ -36,7 +36,7 @@ export class PhysicianService {
     const physicianEntity = this.physicianRepository.create();
 
     physicianEntity.user = user;
-    physicianEntity.physicianSpecialization = specializations;
+    physicianEntity.specialization = specializations;
 
     await this.physicianRepository.save(physicianEntity);
     return physicianEntity;
@@ -72,7 +72,7 @@ export class PhysicianService {
         specializationsIds,
       );
 
-      physicianEntity.physicianSpecialization = specializations;
+      physicianEntity.specialization = specializations;
     }
 
     await this.physicianRepository.save(physicianEntity);

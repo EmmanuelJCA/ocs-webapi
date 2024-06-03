@@ -17,6 +17,7 @@ import { PersonModule } from './modules/person/person.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { DepartmentModule } from './modules/department/department.module';
 import { PhysicianModule } from './modules/physician/physician.module';
+import { PhysicianSupportModule } from './modules/physician-support/physician-support.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PhysicianModule } from './modules/physician/physician.module';
     UserModule,
     PersonModule,
     PhysicianModule,
+    PhysicianSupportModule,
     PatientModule,
     OncologyCenterModule,
     ClsModule.forRoot({

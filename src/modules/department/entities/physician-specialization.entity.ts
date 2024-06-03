@@ -13,7 +13,7 @@ export class PhysicianSpecializationEntity extends AbstractEntity<Specialization
 
   @ManyToMany(
     () => PhysicianEntity,
-    physician => physician.physicianSpecialization,
+    physician => physician.specialization,
   )
   @JoinTable({
     name: 'physicians_specializations_physicians',

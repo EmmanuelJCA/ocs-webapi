@@ -2,14 +2,14 @@ import { Genre } from '../../../constants/genre';
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { ClassField, DateField, EmailField, EnumField, PhoneField, StringField, StringFieldOptional } from '../../../decorators'
 import { Matches } from 'class-validator';
-import { PhysicianEntity } from '../entities/physician.entity';
+import { PhysicianSupportEntity } from '../entities/physician-support.entity';
 import { SpecializationDto } from '../../department/dtos/specialization.dto';
 import { RoleType } from '../../../constants/role-type';
 import { S3UrlParser } from '../../../decorators/transform.decorators';
 import { OncologyCenterDto } from '../../oncology-center/dtos/oncology-center.dto';
 import { OmitType } from '@nestjs/swagger';
 
-export class PhysicianDto extends AbstractDto {
+export class PhysicianSupportDto extends AbstractDto {
   @DateField({ nullable: true })
   inactivatedAt!: Date | null;
 
@@ -48,17 +48,17 @@ export class PhysicianDto extends AbstractDto {
   @ClassField(() => SpecializationDto, { isArray: true })
   specializations!: SpecializationDto[];
 
-  constructor(physician: PhysicianEntity) {
-    super(physician);
-    this.firstName = physician.user.person.firstName;
-    this.lastName = physician.user.person.lastName;
-    this.email = physician.user.email;
-    this.identification = physician.user.person.identification;
-    this.genre = physician.user.person.genre;
-    this.roles = physician.user.roles;
-    this.dateOfBirth = physician.user.person.dateOfBirth;
-    this.phone = physician.user.person.phone;
-    this.oncologyCenters = physician.user.oncologyCenters;
-    this.specializations = physician.specialization;
+  constructor(physicianSupport: PhysicianSupportEntity) {
+    super(physicianSupport);
+    this.firstName = physicianSupport.user.person.firstName;
+    this.lastName = physicianSupport.user.person.lastName;
+    this.email = physicianSupport.user.email;
+    this.identification = physicianSupport.user.person.identification;
+    this.genre = physicianSupport.user.person.genre;
+    this.roles = physicianSupport.user.roles;
+    this.dateOfBirth = physicianSupport.user.person.dateOfBirth;
+    this.phone = physicianSupport.user.person.phone;
+    this.oncologyCenters = physicianSupport.user.oncologyCenters;
+    this.specializations = physicianSupport.specializations;
   }
 }

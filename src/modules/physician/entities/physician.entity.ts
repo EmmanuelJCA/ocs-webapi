@@ -11,9 +11,9 @@ import { PhysicianSpecializationEntity } from '../../department/entities/physici
 export class PhysicianEntity extends AbstractEntity<PhysicianDto> {
   @ManyToMany(
     () => PhysicianSpecializationEntity,
-    physicianSpecialization => physicianSpecialization.physicians,
+    specialization => specialization.physicians,
   )
-  physicianSpecialization!: PhysicianSpecializationEntity[];
+  specialization!: PhysicianSpecializationEntity[];
 
   @OneToOne(
     () => UserEntity,

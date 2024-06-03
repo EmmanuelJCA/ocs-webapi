@@ -6,8 +6,8 @@ import { UseDto } from '../../../decorators';
 import { OncologyCenterEntity } from '../../oncology-center/entities/oncology-center.entity';
 import { UserDto } from '../dtos/user.dto';
 import { PersonEntity } from '../../person/entities/person.entity';
-// import { PhysicianEntity } from '../../physician/entities/physician.entita';
 import { PhysicianEntity } from '../../physician/entities/physician.entity';
+import { PhysicianSupportEntity } from '../../physician-support/entities/physician-support.entity';
 
 @Entity({ name: 'users' })
 @UseDto(UserDto)
@@ -41,6 +41,13 @@ export class UserEntity extends AbstractEntity<UserDto> {
     { nullable: false }
   )
   physician!: PhysicianEntity;
+
+  @OneToOne(
+    () => PhysicianSupportEntity,
+    physicianSupport => physicianSupport.user,
+    { nullable: false }
+  )
+  physicianSupport!: PhysicianSupportEntity;
 
   @ManyToMany(
     () => OncologyCenterEntity,
