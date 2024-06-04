@@ -8,7 +8,7 @@ import { DepartmentModule } from '../department/department.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhysicianEntity]), UserModule, DepartmentModule],
-  exports: [],
+  exports: [PhysicianService],
   providers: [PhysicianService],
   controllers: [PhysicianController],
 })

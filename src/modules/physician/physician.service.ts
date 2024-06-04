@@ -43,12 +43,12 @@ export class PhysicianService {
   }
 
   async findAll(): Promise<PhysicianEntity[]> {
-    return this.physicianRepository.find({ relations: ['user', 'physicianSpecialization', 'user.oncologyCenters'] });
+    return this.physicianRepository.find({ relations: ['user', 'specialization', 'user.oncologyCenters'] });
   }
 
   async findOne(id: Uuid): Promise<PhysicianEntity> {
     const physicianEntity = await this.physicianRepository.findOne({
-      relations: ['user', 'physicianSpecialization', 'user.oncologyCenters'],
+      relations: ['user', 'specialization', 'user.oncologyCenters'],
       where: {id}
     });
     if (!physicianEntity) {

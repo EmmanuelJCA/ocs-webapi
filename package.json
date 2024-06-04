@@ -13,7 +13,7 @@
     "migration:generate": "yarn run typeorm migration:generate -d ormconfig",
     "migration:run": "yarn run typeorm migration:run -- -d ormconfig",
     "new": "hygen new",
-    "migration:revert": "yarn run typeorm migration:revert",
+    "migration:revert": "yarn run typeorm migration:revert -- -d ormconfig",
     "schema:drop": "yarn run typeorm schema:drop",
     "watch:dev": "ts-node-dev src/main.ts",
     "debug:dev": "cross-env TS_NODE_CACHE=false ts-node-dev --inspect --ignore '/^src/.*\\.spec\\.ts$/' src/main.ts",

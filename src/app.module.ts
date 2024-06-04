@@ -18,10 +18,12 @@ import { PatientModule } from './modules/patient/patient.module';
 import { DepartmentModule } from './modules/department/department.module';
 import { PhysicianModule } from './modules/physician/physician.module';
 import { PhysicianSupportModule } from './modules/physician-support/physician-support.module';
+import { AppointmentModule } from './modules/appointment/appointment.module';
 
 @Module({
   imports: [
     AuthModule,
+    AppointmentModule,
     DepartmentModule,
     UserModule,
     PersonModule,

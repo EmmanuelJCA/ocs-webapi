@@ -16,7 +16,21 @@ export class PatientService {
   ) {}
 
   @Transactional()
-  async create({ email, ...personalInfo }: CreatePatientDto): Promise<PatientEntity> {
+  async create({ email, ...personalInfo }: CreatePatientDto, returnExisting: boolean = false): Promise<PatientEntity> {
+    if (returnExisting) {
+      const existingEmail = await this.patientRepository.findOne({
+        relations: ['person'],
+        where: {
+          email,
+          person: {
+            identification: personalInfo.identification
+          }
+        },
+      });
+
+      if (existingEmail) return existingEmail;
+    }
+
     const existingEmail = await this.patientRepository.findOneBy({ email });
 
     if (existingEmail) {

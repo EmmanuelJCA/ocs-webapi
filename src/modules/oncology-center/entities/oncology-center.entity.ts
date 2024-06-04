@@ -1,9 +1,10 @@
-import { Column, Entity, ManyToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToOne } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { UseDto } from '../../../decorators';
 import { UserEntity } from '../../user/entities/user.entity';
 import { OncologyCenterDto } from '../dtos/oncology-center.dto';
+import { AppointmentEntity } from '../../appointment/entities/appointment.entity';
 
 @Entity({ name: 'oncology_centers' })
 @UseDto(OncologyCenterDto)
@@ -25,4 +26,11 @@ export class OncologyCenterEntity extends AbstractEntity<OncologyCenterDto> {
 
   @ManyToMany(() => UserEntity, (user) => user.oncologyCenters)
   users!: UserEntity[];
+
+  @OneToOne(
+    () => AppointmentEntity,
+    appointment => appointment.oncologyCenter,
+    { nullable: false }
+  )
+  appointment!: AppointmentEntity;
 }

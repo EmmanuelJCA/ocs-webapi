@@ -5,6 +5,7 @@ import { UseDto } from '../../../decorators';
 import { UserEntity } from '../../user/entities/user.entity';
 import { PhysicianDto } from '../dtos/physician.dto';
 import { PhysicianSpecializationEntity } from '../../department/entities/physician-specialization.entity';
+import { AppointmentEntity } from '../../appointment/entities/appointment.entity';
 
 @Entity({ name: 'physicians' })
 @UseDto(PhysicianDto)
@@ -22,4 +23,11 @@ export class PhysicianEntity extends AbstractEntity<PhysicianDto> {
   )
   @JoinColumn({ name: 'user_id' })
   user!: UserEntity;
+
+  @OneToOne(
+    () => AppointmentEntity,
+    appointment => appointment.physician,
+    { nullable: false }
+  )
+  appointment!: AppointmentEntity;
 }
