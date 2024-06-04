@@ -7,6 +7,7 @@ import { PatientModule } from '../patient/patient.module';
 import { AppointmentService } from './appointment.service';
 import { AppointmentController } from './appointment.controller';
 import { OncologyCenterModule } from '../oncology-center/oncology-center.module';
+import { AppointmentReasonController } from './appointment-reason.controller';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { OncologyCenterModule } from '../oncology-center/oncology-center.module'
   ],
   exports: [],
   providers: [AppointmentService],
-  controllers: [AppointmentController],
+  controllers: [AppointmentController, AppointmentReasonController],
 })
 export class AppointmentModule {}

@@ -65,6 +65,10 @@ export class AppointmentService {
     return appointmentEntity;
   }
 
+  async findReasons(): Promise<AppointmentReasonEntity[]> {
+    return this.appointmentReasonRepository.find();
+  }
+
   async findOneReason(id: Uuid): Promise<AppointmentReasonEntity> {
     const reasonEntity = await this.appointmentReasonRepository.findOneBy({ id });
     if (!reasonEntity) {
