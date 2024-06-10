@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { UseDto } from '../../../decorators';
@@ -27,10 +27,9 @@ export class OncologyCenterEntity extends AbstractEntity<OncologyCenterDto> {
   @ManyToMany(() => UserEntity, (user) => user.oncologyCenters)
   users!: UserEntity[];
 
-  @OneToOne(
+  @OneToMany(
     () => AppointmentEntity,
-    appointment => appointment.oncologyCenter,
-    { nullable: false }
+    appointment => appointment.oncologyCenter
   )
-  appointment!: AppointmentEntity;
+  appointment?: AppointmentEntity[];
 }

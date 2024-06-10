@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne } from 'typeorm';
 import { UseDto } from '../../../decorators/use-dto.decorator';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { PatientEntity } from '../../patient/entities/patient.entity';
@@ -6,6 +6,7 @@ import { PhysicianEntity } from '../../physician/entities/physician.entity';
 import { AppointmentReasonEntity } from './appointment-reason.entity';
 import { AppointmentDto } from '../dtos/appointment.dto';
 import { OncologyCenterEntity } from '../../oncology-center/entities/oncology-center.entity';
+// import { DiagnosticEntity } from '../../diagnostic/entities/diagnostic.entity';
 
 @Entity({ name: 'appointments' })
 @UseDto(AppointmentDto)
@@ -19,15 +20,20 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
   @Column({ type: 'timestamp', nullable: true })
   endDateTime?: Date;
 
-  @OneToOne(
+  @ManyToOne(
     () => AppointmentReasonEntity,
     reason => reason.appointment,
     { eager: true, nullable: false, cascade: true }
   )
   @JoinColumn({ name: 'appointment_reason_id' })
-  reason!: AppointmentReasonEntity;
 
-  @OneToOne(
+  @ManyToMany(
+    () => AppointmentReasonEntity,
+    reason => reason.appointment,
+  )
+  reasons!: AppointmentReasonEntity[];
+
+  @ManyToOne(
     () => OncologyCenterEntity,
     oncologyCenter => oncologyCenter.appointment,
     { eager: true, nullable: false, cascade: true }
@@ -50,4 +56,17 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
   )
   @JoinColumn({ name: 'physician_id' })
   physician!: PhysicianEntity;
+
+  // @OneToMany(
+  //   () => DiagnosticEntity,
+  //   diagnostic => diagnostic.appointment,
+  //   { eager: true }
+  // )
+  // diagnostics!: DiagnosticEntity[];
+
+  // @ManyToMany(
+  //   () => DiagnosticEntity,
+  //   diagnostic => diagnostic.monitoringAppointments
+  // )
+  // monitoredDiagnostics!: DiagnosticEntity[];
 }

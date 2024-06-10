@@ -11,7 +11,7 @@ export class CreateAppointmentDto {
   endDateTime?: Date;
 
   @UUIDField()
-  reasonId!: Uuid;
+  reasonsIds!: Uuid[];
 
   @UUIDField()
   physicianId!: Uuid;

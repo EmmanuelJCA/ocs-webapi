@@ -11,7 +11,7 @@ export class UpdateAppointmentDto {
   endDateTime?: Date;
 
   @UUIDFieldOptional()
-  reasonId!: Uuid;
+  reasonsIds!: Uuid[];
 
   @UUIDFieldOptional()
   physicianId!: Uuid;

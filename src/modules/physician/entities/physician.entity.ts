@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToMany, OneToOne } from 'typeorm';
+import { Entity, JoinColumn, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { UseDto } from '../../../decorators';
@@ -24,10 +24,9 @@ export class PhysicianEntity extends AbstractEntity<PhysicianDto> {
   @JoinColumn({ name: 'user_id' })
   user!: UserEntity;
 
-  @OneToOne(
+  @OneToMany(
     () => AppointmentEntity,
-    appointment => appointment.physician,
-    { nullable: false }
+    appointment => appointment.physician
   )
-  appointment!: AppointmentEntity;
+  appointment!: AppointmentEntity[];
 }

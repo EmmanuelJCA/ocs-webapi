@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentEntity } from './entities/appointment.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { PatientService } from '../patient/patient.service';
@@ -23,7 +23,7 @@ export class AppointmentService {
   ) {}
 
   async create(
-    { physicianId, reasonId, oncologyCenterId, patientId, ...appointment }: CreateAppointmentDto
+    { physicianId, reasonsIds, oncologyCenterId, patientId, ...appointment }: CreateAppointmentDto
   ): Promise<AppointmentEntity> {
     const physicianEntity = await this.physicianService.findOne(physicianId);
 
@@ -38,14 +38,14 @@ export class AppointmentService {
     }
 
     const oncologyCenterEntity = await this.oncologyCenterService.getOncologyCenter(oncologyCenterId);
-    const appointmentReasonEntity = await this.findOneReason(reasonId);
+    const appointmentReasonEntity = await this.findReasonsByIds(reasonsIds);
 
 
     const appointmentEntity = this.appointmentRepository.create(appointment);
 
     appointmentEntity.patient = patientEntity;
     appointmentEntity.physician = physicianEntity;
-    appointmentEntity.reason = appointmentReasonEntity;
+    appointmentEntity.reasons = appointmentReasonEntity;
     appointmentEntity.oncologyCenter = oncologyCenterEntity;
 
     await this.appointmentRepository.save(appointmentEntity);
@@ -77,10 +77,20 @@ export class AppointmentService {
     return reasonEntity;
   }
 
+  async findReasonsByIds(ids: Uuid[]): Promise<AppointmentReasonEntity[]> {
+    const reasons = await this.appointmentReasonRepository.findBy({ id: In(ids) });
+
+    if (reasons.length !== ids.length) {
+      throw new NotFoundException('Motivos de la cita no encontrados');
+    }
+
+    return reasons;
+  }
+
   @Transactional()
   async update(
     id: Uuid,
-    { physicianId, reasonId, oncologyCenterId, patientId, ...appointmentUpdated }: UpdateAppointmentDto
+    { physicianId, reasonsIds, oncologyCenterId, patientId, ...appointmentUpdated }: UpdateAppointmentDto
   ): Promise<AppointmentEntity> {
     const appointmentEntity = await this.findOne(id);
 
@@ -109,9 +119,9 @@ export class AppointmentService {
       throw new BadRequestException('El médico no puede tener una cita consigo mismo');
     }
 
-    if (reasonId) {
-      const reasonEntity = await this.findOneReason(reasonId);
-      appointment.reason = reasonEntity;
+    if (reasonsIds) {
+      const reasonEntity = await this.findReasonsByIds(reasonsIds);
+      appointment.reasons = reasonEntity;
     }
 
     await this.appointmentRepository.save(appointment);

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { UseDto } from '../../../decorators/use-dto.decorator';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { AppointmentEntity } from './appointment.entity';
@@ -10,10 +10,18 @@ export class AppointmentReasonEntity extends AbstractEntity<AppointmentReasonDto
   @Column({ unique: true, type: 'varchar' })
   description!: string;
 
-  @OneToOne(
+  @ManyToMany(
     () => AppointmentEntity,
-    appointment => appointment.reason,
+    appointment => appointment.reasons,
     { nullable: false }
   )
-  appointment!: AppointmentEntity;
+  @JoinTable({
+    name: 'appointment_reasons_appointments',
+    joinColumn: { name: 'appointment_reasons_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'appointments_id',
+      referencedColumnName: 'id',
+    },
+  })
+  appointment!: AppointmentEntity[];
 }

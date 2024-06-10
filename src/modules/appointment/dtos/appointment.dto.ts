@@ -15,8 +15,8 @@ export class AppointmentDto extends AbstractDto {
   @DateFieldOptional()
   endDateTime?: Date;
 
-  @ClassField(() => AppointmentReasonDto)
-  reason!: AppointmentReasonDto;
+  @ClassField(() => AppointmentReasonDto, { isArray: true })
+  reasons!: AppointmentReasonDto[];
 
   @ClassField(() => PhysicianDto)
   physician!: PhysicianDto;
@@ -29,7 +29,7 @@ export class AppointmentDto extends AbstractDto {
     this.notes = appointment.notes;
     this.startDateTime = appointment.startDateTime;
     this.endDateTime = appointment.endDateTime
-    this.reason = appointment.reason;
+    this.reasons = appointment.reasons;
     this.physician = appointment.physician.toDto();
     this.patient = appointment.patient.toDto();
   }
