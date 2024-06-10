@@ -16,7 +16,7 @@ import { AppointmentReasonController } from './appointment-reason.controller';
     PhysicianModule,
     PatientModule,
   ],
-  exports: [],
+  exports: [AppointmentService],
   providers: [AppointmentService],
   controllers: [AppointmentController, AppointmentReasonController],
 })

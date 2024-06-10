@@ -19,12 +19,16 @@ import { DepartmentModule } from './modules/department/department.module';
 import { PhysicianModule } from './modules/physician/physician.module';
 import { PhysicianSupportModule } from './modules/physician-support/physician-support.module';
 import { AppointmentModule } from './modules/appointment/appointment.module';
+import { CancerModule } from './modules/cancer/cancer.module';
+import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 
 @Module({
   imports: [
     AuthModule,
     AppointmentModule,
+    CancerModule,
     DepartmentModule,
+    DiagnosticModule,
     UserModule,
     PersonModule,
     PhysicianModule,
