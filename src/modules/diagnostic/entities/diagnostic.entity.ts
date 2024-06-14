@@ -5,6 +5,7 @@ import { AppointmentEntity } from '../../appointment/entities/appointment.entity
 import { CancerTypeEntity } from '../../cancer/entities/cancer-type.entity';
 import { CancerStageEntity } from '../../cancer/entities/cancer-stage.entity';
 import { DiagnosticDto } from '../dtos/diagnostic.dto';
+import { TreatmentEntity } from '../../treatment/entities/treatment.entity';
 
 @Entity({ name: 'diagnostics' })
 @UseDto(DiagnosticDto)
@@ -55,4 +56,18 @@ export class DiagnosticEntity extends AbstractEntity<DiagnosticDto> {
     },
   })
   monitoringAppointments!: AppointmentEntity[];
+
+  @ManyToMany(
+    () => TreatmentEntity,
+    treatment => treatment.diagnostics,
+  )
+  @JoinTable({
+    name: 'diagnostics_treatments',
+    joinColumn: { name: 'diagnostic_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'treatment_id',
+      referencedColumnName: 'id',
+    },
+  })
+  treatments!: TreatmentEntity[];
 }

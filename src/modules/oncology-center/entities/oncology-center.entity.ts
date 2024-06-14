@@ -31,5 +31,11 @@ export class OncologyCenterEntity extends AbstractEntity<OncologyCenterDto> {
     () => AppointmentEntity,
     appointment => appointment.oncologyCenter
   )
-  appointment?: AppointmentEntity[];
+  appointments?: AppointmentEntity[];
+
+  @OneToMany(
+    () => AppointmentEntity,
+    appointment => appointment.oncologyCenter
+  )
+  treatments?: AppointmentEntity[];
 }

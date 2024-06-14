@@ -4,6 +4,7 @@ import { AbstractEntity } from '../../../common/abstract.entity';
 import { DepartmentDto } from '../dtos';
 import { PhysicianSupportSpecializationEntity } from './physician-support-specialization.entity';
 import { PhysicianSpecializationEntity } from './physician-specialization.entity';
+import { TreatmentTypeEntity } from '../../treatment/entities/treatment-type.entity';
 
 @Entity({ name: 'departments' })
 @UseDto(DepartmentDto)
@@ -24,4 +25,10 @@ export class DepartmentEntity extends AbstractEntity<DepartmentDto> {
     { eager: true, nullable: false }
   )
   physicianSupportSpecialization!: PhysicianSupportSpecializationEntity[];
+
+  @OneToMany(
+    () => TreatmentTypeEntity,
+    treatmentType => treatmentType.department
+  )
+  treatmentTypes!: TreatmentTypeEntity[];
 }

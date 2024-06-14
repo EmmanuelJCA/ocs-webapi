@@ -4,6 +4,7 @@ import { ClassField, DateField, DateFieldOptional, StringField } from '../../../
 import { PatientDto } from '../../patient/dtos/patient.dto';
 import { PhysicianDto } from '../../physician/dtos/physician.dto';
 import { AppointmentReasonDto } from './appointment-reason.dto';
+import { DiagnosticDto } from '../../diagnostic/dtos/diagnostic.dto';
 
 export class AppointmentDto extends AbstractDto {
   @StringField()
@@ -24,6 +25,12 @@ export class AppointmentDto extends AbstractDto {
   @ClassField(() => PatientDto)
   patient!: PatientDto;
 
+  @ClassField(() => DiagnosticDto, { isArray: true })
+  diagnostics!: DiagnosticDto[];
+
+  @ClassField(() => DiagnosticDto, { isArray: true })
+  monitoredDiagnostics!: DiagnosticDto[];
+
   constructor(appointment: AppointmentEntity) {
     super(appointment);
     this.notes = appointment.notes;
@@ -32,5 +39,7 @@ export class AppointmentDto extends AbstractDto {
     this.reasons = appointment.reasons;
     this.physician = appointment.physician.toDto();
     this.patient = appointment.patient.toDto();
+    this.diagnostics = appointment.diagnostics.toDtos();
+    this.monitoredDiagnostics = appointment.monitoredDiagnostics.toDtos();
   }
 }

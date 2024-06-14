@@ -20,13 +20,6 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
   @Column({ type: 'timestamp', nullable: true })
   endDateTime?: Date;
 
-  @ManyToOne(
-    () => AppointmentReasonEntity,
-    reason => reason.appointment,
-    { eager: true, nullable: false, cascade: true }
-  )
-  @JoinColumn({ name: 'appointment_reason_id' })
-
   @ManyToMany(
     () => AppointmentReasonEntity,
     reason => reason.appointment,
@@ -35,7 +28,7 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
 
   @ManyToOne(
     () => OncologyCenterEntity,
-    oncologyCenter => oncologyCenter.appointment,
+    oncologyCenter => oncologyCenter.appointments,
     { eager: true, nullable: false, cascade: true }
   )
   @JoinColumn({ name: 'oncology_center_id' })
@@ -51,7 +44,7 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
 
   @OneToOne(
     () => PhysicianEntity,
-    physician => physician.appointment,
+    physician => physician.appointments,
     { eager: true, nullable: false, cascade: true }
   )
   @JoinColumn({ name: 'physician_id' })

@@ -6,6 +6,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { PhysicianDto } from '../dtos/physician.dto';
 import { PhysicianSpecializationEntity } from '../../department/entities/physician-specialization.entity';
 import { AppointmentEntity } from '../../appointment/entities/appointment.entity';
+import { TreatmentEntity } from '../../treatment/entities/treatment.entity';
 
 @Entity({ name: 'physicians' })
 @UseDto(PhysicianDto)
@@ -28,5 +29,11 @@ export class PhysicianEntity extends AbstractEntity<PhysicianDto> {
     () => AppointmentEntity,
     appointment => appointment.physician
   )
-  appointment!: AppointmentEntity[];
+  appointments!: AppointmentEntity[];
+
+  @OneToMany(
+    () => TreatmentEntity,
+    treatment => treatment.physician
+  )
+  treatments!: TreatmentEntity[];
 }
