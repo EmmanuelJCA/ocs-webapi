@@ -2,8 +2,8 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { UseDto } from '../../../decorators';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { DepartmentDto } from '../dtos';
-import { PhysicianSupportSpecializationEntity } from './physician-support-specialization.entity';
-import { PhysicianSpecializationEntity } from './physician-specialization.entity';
+import { PhysicianSupportSpecializationEntity } from '../../physician-support/entities/physician-support-specialization.entity';
+import { PhysicianSpecializationEntity } from '../../physician/entities/physician-specialization.entity';
 import { TreatmentTypeEntity } from '../../treatment/entities/treatment-type.entity';
 
 @Entity({ name: 'departments' })

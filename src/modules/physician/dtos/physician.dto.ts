@@ -3,11 +3,11 @@ import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { ClassField, DateField, EmailField, EnumField, PhoneField, StringField, StringFieldOptional } from '../../../decorators'
 import { Matches } from 'class-validator';
 import { PhysicianEntity } from '../entities/physician.entity';
-import { SpecializationDto } from '../../department/dtos/specialization.dto';
 import { RoleType } from '../../../constants/role-type';
 import { S3UrlParser } from '../../../decorators/transform.decorators';
 import { OncologyCenterDto } from '../../oncology-center/dtos/oncology-center.dto';
 import { OmitType } from '@nestjs/swagger';
+import { SpecializationDto } from './specialization.dto';
 
 export class PhysicianDto extends AbstractDto {
   @DateField({ nullable: true })

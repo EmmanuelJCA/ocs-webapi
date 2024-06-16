@@ -1,21 +1,22 @@
 import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhysicianEntity } from './entities/physician.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreatePhysicianDto } from './dtos/create-physician.dto';
 import { Transactional } from 'typeorm-transactional';
 import { UserService } from '../user/user.service';
-import { DepartmentService } from '../department/department.service';
 import { IFile } from '../../interfaces/file';
 import { UpdatePhysicianDto } from './dtos/update-physician.dto';
+import { PhysicianSpecializationEntity } from './entities/physician-specialization.entity';
 
 @Injectable()
 export class PhysicianService {
   constructor(
     @InjectRepository(PhysicianEntity)
     private physicianRepository: Repository<PhysicianEntity>,
+    @InjectRepository(PhysicianSpecializationEntity)
+    private specializationRepository: Repository<PhysicianSpecializationEntity>,
     private userService: UserService,
-    private departmentService: DepartmentService,
   ) {}
 
   @Transactional()
@@ -24,7 +25,7 @@ export class PhysicianService {
     file?: IFile,
   ): Promise<PhysicianEntity> {
     const specializations =
-    await this.departmentService.findSpecializationsByIds(
+    await this.findSpecializationsByIds(
       specializationsIds,
     );
 
@@ -46,6 +47,10 @@ export class PhysicianService {
     return this.physicianRepository.find({ relations: ['user', 'specialization', 'user.oncologyCenters'] });
   }
 
+  async findAllSpecializations(): Promise<PhysicianSpecializationEntity[]> {
+    return this.specializationRepository.find();
+  }
+
   async findOne(id: Uuid): Promise<PhysicianEntity> {
     const physicianEntity = await this.physicianRepository.findOne({
       relations: ['user', 'specialization', 'user.oncologyCenters'],
@@ -58,6 +63,21 @@ export class PhysicianService {
     return physicianEntity;
   }
 
+  async findOneSpecialization(id: Uuid): Promise<PhysicianSpecializationEntity> {
+    const specialization = await this.specializationRepository.findOne({
+      where: {id}
+    });
+    if (!specialization) {
+      throw new NotFoundException('Especialidad no encontrada');
+    }
+
+    return specialization;
+  }
+
+  async findSpecializationsByIds(ids: Uuid[]): Promise<PhysicianSpecializationEntity[]> {
+    return this.specializationRepository.findBy({ id: In(ids) });
+  }
+
   @Transactional()
   async update(id: Uuid, updatePhysicianDto: UpdatePhysicianDto, file?: IFile,): Promise<PhysicianEntity> {
     const physicianEntity = await this.findOne(id);
@@ -68,7 +88,7 @@ export class PhysicianService {
 
     if (specializationsIds) {
       const specializations =
-      await this.departmentService.findSpecializationsByIds(
+      await this.findSpecializationsByIds(
         specializationsIds,
       );
 

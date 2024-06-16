@@ -4,7 +4,7 @@ import { AbstractEntity } from '../../../common/abstract.entity';
 import { UseDto } from '../../../decorators';
 import { UserEntity } from '../../user/entities/user.entity';
 import { PhysicianSupportDto } from '../dtos/physician-support.dto';
-import { PhysicianSupportSpecializationEntity } from '../../department/entities/physician-support-specialization.entity';
+import { PhysicianSupportSpecializationEntity } from './physician-support-specialization.entity';
 import { TreatmentSessionEntity } from '../../treatment/entities/treatment-session.entity';
 
 @Entity({ name: 'physician_supports' })

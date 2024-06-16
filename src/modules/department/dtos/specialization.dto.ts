@@ -1,6 +1,7 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { StringField } from '../../../decorators';
-import { PhysicianSpecializationEntity, PhysicianSupportSpecializationEntity } from '../entities';
+import { PhysicianSpecializationEntity } from '../../physician/entities/physician-specialization.entity';
+import { PhysicianSupportSpecializationEntity } from '../../physician-support/entities/physician-support-specialization.entity';
 
 export class SpecializationDto extends AbstractDto {
   @StringField()

@@ -4,7 +4,7 @@ import { AbstractEntity } from '../../../common/abstract.entity';
 import { UseDto } from '../../../decorators';
 import { UserEntity } from '../../user/entities/user.entity';
 import { PhysicianDto } from '../dtos/physician.dto';
-import { PhysicianSpecializationEntity } from '../../department/entities/physician-specialization.entity';
+import { PhysicianSpecializationEntity } from './physician-specialization.entity';
 import { AppointmentEntity } from '../../appointment/entities/appointment.entity';
 import { TreatmentEntity } from '../../treatment/entities/treatment.entity';
 

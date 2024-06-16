@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { UseDto } from '../../../decorators';
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { SpecializationDto } from '../dtos';
-import { DepartmentEntity } from './department.entity';
-import { PhysicianSupportEntity } from '../../physician-support/entities/physician-support.entity';
+import { DepartmentEntity } from '../../department/entities/department.entity';
+import { PhysicianSupportEntity } from './physician-support.entity';
+import { SpecializationDto } from '../dtos/specialization.dto';
 
 @Entity({ name: 'physician_support_specializations' })
 @UseDto(SpecializationDto)

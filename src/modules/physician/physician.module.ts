@@ -4,12 +4,13 @@ import { PhysicianEntity } from './entities/physician.entity';
 import { PhysicianController } from './physician.controller';
 import { PhysicianService } from './physician.service';
 import { UserModule } from '../user/user.module';
-import { DepartmentModule } from '../department/department.module';
+import { PhysicianSpecializationEntity } from './entities/physician-specialization.entity';
+import { PhysicianSpecializationController } from './physiscian-specialization.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PhysicianEntity]), UserModule, DepartmentModule],
+  imports: [TypeOrmModule.forFeature([PhysicianEntity, PhysicianSpecializationEntity]), UserModule],
   exports: [PhysicianService],
   providers: [PhysicianService],
-  controllers: [PhysicianController],
+  controllers: [PhysicianController, PhysicianSpecializationController],
 })
 export class PhysicianModule {}
