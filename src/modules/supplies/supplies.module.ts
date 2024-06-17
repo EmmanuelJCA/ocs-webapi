@@ -8,9 +8,10 @@ import { SuppliesController } from './supplies.controller';
 import { MeasurementUnitController } from './measurement-unit.controller';
 import { SuppliesService } from './supplies.service';
 import { MeasurementUnitEntity } from './entities/measurement-unit.entity';
+import { TreatmentModule } from '../treatment/treatment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SuppliesEntity, MeasurementUnitEntity]), PersonModule, OncologyCenterModule],
+  imports: [TypeOrmModule.forFeature([SuppliesEntity, MeasurementUnitEntity]), PersonModule, OncologyCenterModule, TreatmentModule],
   controllers: [SuppliesController, MeasurementUnitController],
   exports: [],
   providers: [SuppliesService],

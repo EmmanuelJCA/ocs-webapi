@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreatmentEntity } from './entities/treatment.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TreatmentTypeEntity } from './entities/treatment-type.entity';
 
 @Injectable()
@@ -19,5 +19,18 @@ export class TreatmentService {
 
   async findAllTreatmentTypes(): Promise<TreatmentTypeEntity[]> {
     return this.treatmentTypeRepository.find();
+  }
+
+  async findOneTreatmentType(id: Uuid): Promise<TreatmentTypeEntity> {
+    const treatmentTypeEntity = await this.treatmentTypeRepository.findOneBy({id});
+    if (!treatmentTypeEntity) {
+      throw new NotFoundException('Tipo de tratamiento no encontrado');
+    }
+
+    return treatmentTypeEntity;
+  }
+
+  async findTreatmentTypesByIds(ids: Uuid[]): Promise<TreatmentTypeEntity[]> {
+    return this.treatmentTypeRepository.findBy({ id: In(ids) });
   }
 }

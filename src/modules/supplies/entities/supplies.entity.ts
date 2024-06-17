@@ -1,5 +1,5 @@
 import { TreatmentTypeEntity } from './../../treatment/entities/treatment-type.entity';
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { UseDto } from '../../../decorators/use-dto.decorator';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { MeasurementUnitEntity } from './measurement-unit.entity';
@@ -19,8 +19,15 @@ export class SuppliesEntity extends AbstractEntity<SuppliesDto> {
     () => TreatmentTypeEntity,
     treatmentType => treatmentType.supplies
   )
-  @JoinColumn({ name: 'treatment_type_id' })
-  treatmentType!: TreatmentTypeEntity;
+  @JoinTable({
+    name: 'supplies_treatment_types',
+    joinColumn: { name: 'supplies_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'treatment_type_id',
+      referencedColumnName: 'id',
+    },
+  })
+  treatmentTypes!: TreatmentTypeEntity[];
 
   @ManyToOne(
     () => MeasurementUnitEntity,

@@ -22,6 +22,7 @@ import { AppointmentModule } from './modules/appointment/appointment.module';
 import { CancerModule } from './modules/cancer/cancer.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { SuppliesModule } from './modules/supplies/supplies.module';
+import { TreatmentModule } from './modules/treatment/treatment.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SuppliesModule } from './modules/supplies/supplies.module';
     PatientModule,
     OncologyCenterModule,
     SuppliesModule,
+    TreatmentModule,
     ClsModule.forRoot({
       global: true,
       middleware: {

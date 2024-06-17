@@ -11,8 +11,8 @@ export class SuppliesDto extends AbstractDto {
   @StringField()
   description!: string;
 
-  @ClassField(() => TreatmentTypeDto)
-  treatmentType!: TreatmentTypeDto;
+  @ClassField(() => TreatmentTypeDto, { isArray: true })
+  treatmentTypes!: TreatmentTypeDto[];
 
   @ClassField(() => MeasurementUnitDto)
   measurementUnit!: MeasurementUnitDto;
@@ -21,7 +21,7 @@ export class SuppliesDto extends AbstractDto {
     super(supplies);
     this.name = supplies.name;
     this.description = supplies.description;
-    this.treatmentType = supplies.treatmentType;
+    this.treatmentTypes = supplies.treatmentTypes;
     this.measurementUnit = supplies.measurementUnit;
   }
 }

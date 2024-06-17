@@ -30,7 +30,7 @@ export class TreatmentTypeEntity extends AbstractEntity<TreatmentTypeDto> {
 
   @ManyToMany(
     () => SuppliesEntity,
-    supplies => supplies.treatmentType
+    supplies => supplies.treatmentTypes
   )
   supplies!: SuppliesEntity[];
 }
