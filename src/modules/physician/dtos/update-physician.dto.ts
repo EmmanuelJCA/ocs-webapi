@@ -3,8 +3,7 @@ import { Matches, MaxDate, MinDate } from 'class-validator';
 
 import {
   Genre,
-  type RoleType,
-  RoleTypeWithoutSuperAdmin,
+  RoleType,
 } from '../../../constants';
 import {
   BooleanFieldOptional,
@@ -40,7 +39,7 @@ export class UpdatePhysicianDto {
   genre?: Genre;
 
   @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
-  @EnumFieldOptional(() => RoleTypeWithoutSuperAdmin, { each: true })
+  @EnumFieldOptional(() => RoleType, { each: true })
   roles?: RoleType[];
 
   @DateFieldOptional()

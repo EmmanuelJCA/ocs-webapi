@@ -39,6 +39,7 @@ export class PersonService {
   async findOneBy(findData: FindOptionsWhere<PersonEntity> | FindOptionsWhere<PersonEntity>[]): Promise<PersonEntity | null> {
     return this.personRepository.createQueryBuilder('person')
       .leftJoinAndSelect('person.user', 'user')
+      .leftJoinAndSelect('user.oncologyCenters', 'oncologyCenters')
       .where(findData)
       .getOne();
   }

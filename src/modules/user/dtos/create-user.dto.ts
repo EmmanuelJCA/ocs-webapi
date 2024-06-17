@@ -2,8 +2,7 @@ import { Matches, MaxDate, MinDate } from 'class-validator';
 
 import {
   Genre,
-  type RoleType,
-  RoleTypeWithoutSuperAdmin,
+  RoleType,
 } from '../../../constants';
 import {
   DateField,
@@ -14,6 +13,7 @@ import {
   StringField,
   UUIDField,
 } from '../../../decorators';
+import { Transform } from 'class-transformer';
 
 const currentDate = new Date();
 
@@ -37,7 +37,8 @@ export class CreateUserDto {
   @EnumField(() => Genre)
   genre!: Genre;
 
-  @EnumField(() => RoleTypeWithoutSuperAdmin, { each: true })
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
+  @EnumField(() => RoleType, { each: true })
   roles!: RoleType[];
 
   @DateField()
@@ -60,6 +61,7 @@ export class CreateUserDto {
   @PhoneField()
   phone!: string;
 
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
   @UUIDField({ each: true, minLength: 1 })
   oncologyCentersIds!: Uuid[];
 }

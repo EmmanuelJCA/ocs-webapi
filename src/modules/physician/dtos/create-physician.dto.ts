@@ -1,7 +1,8 @@
 import { Genre } from '../../../constants/genre';
 import { DateField, EmailField, EnumField, PasswordField, PhoneField, StringField, UUIDField } from '../../../decorators'
 import { Matches, MaxDate, MinDate } from 'class-validator';
-import { RoleType, RoleTypeWithoutSuperAdmin } from '../../../constants/role-type';
+import { RoleType } from '../../../constants/role-type';
+import { Transform } from 'class-transformer';
 
 const currentDate = new Date();
 
@@ -25,7 +26,8 @@ export class CreatePhysicianDto {
   @EnumField(() => Genre)
   genre!: Genre;
 
-  @EnumField(() => RoleTypeWithoutSuperAdmin, { each: true })
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
+  @EnumField(() => RoleType, { each: true })
   roles!: RoleType[];
 
   @DateField()
@@ -48,9 +50,11 @@ export class CreatePhysicianDto {
   @PhoneField()
   phone!: string;
 
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
   @UUIDField({ each: true, minLength: 1 })
   oncologyCentersIds!: Uuid[];
 
+  @Transform(({ value }: { value: string }) => (value ? value.split(',') : []))
   @UUIDField({ each: true, minLength: 1 })
   specializationsIds!: Uuid[];
 }

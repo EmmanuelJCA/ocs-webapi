@@ -1,8 +1,8 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { PersonEntity } from '../entities/person.entity';
-import { DateField, EnumField, PhoneField, StringField, StringFieldOptional } from '../../../decorators';
+import { DateField, EmailField, EnumField, PhoneField, S3UrlParser, StringField, StringFieldOptional, UUIDField } from '../../../decorators';
 import { Matches } from 'class-validator';
-import { Genre } from '../../../constants';
+import { Genre, RoleType } from '../../../constants';
 
 export class PersonDto extends AbstractDto {
   @StringField()
@@ -27,6 +27,19 @@ export class PersonDto extends AbstractDto {
   @PhoneField()
   phone!: string;
 
+  @EmailField()
+  email?: string;
+
+  @EnumField(() => RoleType, { each: true })
+  roles?: RoleType[];
+
+  @StringFieldOptional({ nullable: true })
+  @S3UrlParser()
+  avatar?: string | null;
+
+  @UUIDField()
+  oncologyCentersIds?: Uuid[];
+
   constructor(person: PersonEntity) {
     super(person);
     this.firstName = person.firstName;
@@ -36,5 +49,9 @@ export class PersonDto extends AbstractDto {
     this.identification = person.identification;
     this.dateOfBirth = person.dateOfBirth;
     this.phone = person.phone;
+    this.email = person.user?.email;
+    this.roles = person.user?.roles;
+    this.avatar = person.user?.avatar;
+    this.oncologyCentersIds = person.user?.oncologyCenters.map(oc => oc.id);
   }
 }

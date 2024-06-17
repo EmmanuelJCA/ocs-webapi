@@ -53,6 +53,7 @@ export class PhysicianDto extends AbstractDto {
     this.firstName = physician.user.person.firstName;
     this.lastName = physician.user.person.lastName;
     this.email = physician.user.email;
+    this.avatar = physician.user.avatar;
     this.identification = physician.user.person.identification;
     this.genre = physician.user.person.genre;
     this.roles = physician.user.roles;

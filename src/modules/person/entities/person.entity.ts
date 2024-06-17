@@ -34,8 +34,8 @@ export class PersonEntity extends AbstractEntity<PersonDto> {
   @Column({ unique: true, type: 'varchar' })
   phone!: string;
 
-  @OneToOne(() => UserEntity, user => user.person, { nullable: false })
-  user!: UserEntity;
+  @OneToOne(() => UserEntity, user => user.person)
+  user!: UserEntity | null;
 
   @OneToOne(() => PatientEntity, patient => patient.person, { nullable: false })
   patient!: PatientEntity;
