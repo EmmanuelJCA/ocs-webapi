@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CancerTypeEntity } from '../cancer/entities/cancer-type.entity';
 import { CancerStageEntity } from '../cancer/entities/cancer-stage.entity';
+import { CreateCancerTypeDto } from './dtos/create-cancer-type.dto';
+import { UpdateCancerTypeDto } from './dtos/update-cancer-type.dto';
 
 @Injectable()
 export class CancerService {
@@ -12,6 +14,11 @@ export class CancerService {
     @InjectRepository(CancerStageEntity)
     private cancerStageRepository: Repository<CancerStageEntity>,
   ) {}
+
+  async createCancerType(createCancerType: CreateCancerTypeDto): Promise<CancerTypeEntity> {
+    const cancerTypeEntity = this.cancerTypeRepository.create(createCancerType);
+    return this.cancerTypeRepository.save(cancerTypeEntity);
+  }
 
   async findAllCancerTypes(): Promise<CancerTypeEntity[]> {
     return this.cancerTypeRepository.find();
@@ -37,5 +44,11 @@ export class CancerService {
     }
 
     return cancerStageEntity;
+  }
+
+  async updateCancerType(id: Uuid, updateCancerType: UpdateCancerTypeDto): Promise<CancerTypeEntity> {
+    const cancerTypeEntity = await this.findOneCancerType(id);
+    this.cancerTypeRepository.merge(cancerTypeEntity, updateCancerType);
+    return this.cancerTypeRepository.save(cancerTypeEntity);
   }
 }

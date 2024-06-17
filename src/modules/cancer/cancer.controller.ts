@@ -1,14 +1,31 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Put } from '@nestjs/common';
+import { ApiTags, ApiOkResponse, ApiResponse, ApiCreatedResponse, ApiAcceptedResponse } from '@nestjs/swagger';
 import { Auth, UUIDParam } from '../../decorators/http.decorators';
 import { CancerStageDto } from './dtos/cancer-stage.dto';
 import { CancerService } from './cancer.service';
 import { CancerTypeDto } from './dtos/cancer-type.dto';
+import { CreateCancerTypeDto } from './dtos/create-cancer-type.dto';
+import { UpdateCancerTypeDto } from './dtos/update-cancer-type.dto';
 
 @Controller('cancer')
 @ApiTags('cancer')
 export class CancerController {
   constructor(private cancerService: CancerService) {}
+
+  @Post('/types')
+  @Auth([])
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: CancerTypeDto })
+  async createCancerType(
+    @Body() createCancerTypeDto: CreateCancerTypeDto,
+  ): Promise<CancerTypeDto> {
+    const cancerTypeEntityEntity =
+      await this.cancerService.createCancerType(
+        createCancerTypeDto,
+      );
+
+    return cancerTypeEntityEntity.toDto();
+  }
 
   @Get('/types')
   @Auth([])
@@ -62,5 +79,21 @@ export class CancerController {
     const stageEntity = await this.cancerService.findOneCancerStage(id);
 
     return stageEntity.toDto();
+  }
+
+  @Put(':id')
+  @Auth([])
+  @ApiAcceptedResponse({ type: CancerTypeDto })
+  async updateCancerType(
+    @UUIDParam('id') id: Uuid,
+    @Body() updateCancerTypeDto: UpdateCancerTypeDto,
+  ): Promise<CancerTypeDto> {
+    const cancerTypeEntity =
+      await this.cancerService.updateCancerType(
+        id,
+        updateCancerTypeDto,
+      );
+
+    return cancerTypeEntity.toDto();
   }
 }
