@@ -81,7 +81,7 @@ export class CancerController {
     return stageEntity.toDto();
   }
 
-  @Put(':id')
+  @Put('/types/:id')
   @Auth([])
   @ApiAcceptedResponse({ type: CancerTypeDto })
   async updateCancerType(
