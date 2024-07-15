@@ -6,6 +6,7 @@ import { CancerService } from './cancer.service';
 import { CancerTypeDto } from './dtos/cancer-type.dto';
 import { CreateCancerTypeDto } from './dtos/create-cancer-type.dto';
 import { UpdateCancerTypeDto } from './dtos/update-cancer-type.dto';
+import { RoleType } from '../../constants/role-type';
 
 @Controller('cancer')
 @ApiTags('cancer')
@@ -13,7 +14,7 @@ export class CancerController {
   constructor(private cancerService: CancerService) {}
 
   @Post('/types')
-  @Auth([])
+  @Auth([RoleType.ADMINISTRATOR, RoleType.SUPER_ADMINISTRATOR])
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({ type: CancerTypeDto })
   async createCancerType(
@@ -82,7 +83,7 @@ export class CancerController {
   }
 
   @Put('/types/:id')
-  @Auth([])
+  @Auth([RoleType.ADMINISTRATOR, RoleType.SUPER_ADMINISTRATOR])
   @ApiAcceptedResponse({ type: CancerTypeDto })
   async updateCancerType(
     @UUIDParam('id') id: Uuid,

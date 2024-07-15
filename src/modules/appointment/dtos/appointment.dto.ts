@@ -1,10 +1,11 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { AppointmentEntity } from '../entities/appointment.entity';
-import { ClassField, DateField, DateFieldOptional, StringField } from '../../../decorators/field.decorators';
+import { ClassField, DateField, StringField } from '../../../decorators/field.decorators';
 import { PatientDto } from '../../patient/dtos/patient.dto';
 import { PhysicianDto } from '../../physician/dtos/physician.dto';
 import { AppointmentReasonDto } from './appointment-reason.dto';
 import { DiagnosticDto } from '../../diagnostic/dtos/diagnostic.dto';
+import { OncologyCenterDto } from '../../oncology-center/dtos/oncology-center.dto';
 
 export class AppointmentDto extends AbstractDto {
   @StringField()
@@ -13,8 +14,11 @@ export class AppointmentDto extends AbstractDto {
   @DateField()
   startDateTime!: Date;
 
-  @DateFieldOptional()
-  endDateTime?: Date;
+  @DateField()
+  endDateTime!: Date | null;
+
+  @ClassField(() => OncologyCenterDto)
+  oncologyCenter!: OncologyCenterDto;
 
   @ClassField(() => AppointmentReasonDto, { isArray: true })
   reasons!: AppointmentReasonDto[];
@@ -41,5 +45,6 @@ export class AppointmentDto extends AbstractDto {
     this.patient = appointment.patient.toDto();
     this.diagnostics = appointment.diagnostics.toDtos();
     this.monitoredDiagnostics = appointment.monitoredDiagnostics.toDtos();
+    this.oncologyCenter = appointment.oncologyCenter.toDto();
   }
 }

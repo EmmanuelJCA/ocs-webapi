@@ -43,6 +43,7 @@ export class AppointmentService {
 
     const appointmentEntity = this.appointmentRepository.create(appointment);
 
+    appointmentEntity.notes = appointment.notes || '';
     appointmentEntity.patient = patientEntity;
     appointmentEntity.physician = physicianEntity;
     appointmentEntity.reasons = appointmentReasonEntity;
@@ -54,13 +55,13 @@ export class AppointmentService {
   }
 
   async findAll(): Promise<AppointmentEntity[]> {
-    return this.appointmentRepository.find();
+    return this.appointmentRepository.find({relations: ['reasons']});
   }
 
   async findOne(id: Uuid): Promise<AppointmentEntity> {
-    const appointmentEntity = await this.appointmentRepository.findOneBy({ id });
+    const appointmentEntity = await this.appointmentRepository.findOne({relations: ['reasons', 'physician.user.oncologyCenters'], where: { id }});
     if (!appointmentEntity) {
-      throw new NotFoundException('Paciente no encontrado');
+      throw new NotFoundException('Cita médica no encontrada');
     }
     return appointmentEntity;
   }

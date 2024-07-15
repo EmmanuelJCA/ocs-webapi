@@ -5,6 +5,7 @@ import { SuppliesService } from './supplies.service';
 import { SuppliesDto } from './dtos/supplies.dto';
 import { CreateSuppliesDto } from './dtos/create-supplies.dto';
 import { UpdateSuppliesDto } from './dtos/update-supplies.dto';
+import { RoleType } from '../../constants/role-type';
 
 @Controller('supplies')
 @ApiTags('supplies')
@@ -12,7 +13,7 @@ export class SuppliesController {
   constructor(private suppliesService: SuppliesService) {}
 
   @Post()
-  @Auth([])
+  @Auth([RoleType.ADMINISTRATOR, RoleType.SUPER_ADMINISTRATOR])
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({ type: SuppliesDto })
   async createSupplies(
@@ -54,7 +55,7 @@ export class SuppliesController {
   }
 
   @Put(':id')
-  @Auth([])
+  @Auth([RoleType.ADMINISTRATOR, RoleType.SUPER_ADMINISTRATOR])
   @ApiAcceptedResponse({ type: SuppliesDto })
   async updateSupplies(
     @UUIDParam('id') id: Uuid,

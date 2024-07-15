@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { UseDto } from '../../../decorators/use-dto.decorator';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { PatientEntity } from '../../patient/entities/patient.entity';
@@ -11,14 +11,14 @@ import { DiagnosticEntity } from '../../diagnostic/entities/diagnostic.entity';
 @Entity({ name: 'appointments' })
 @UseDto(AppointmentDto)
 export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
-  @Column({ unique: true, type: 'varchar' })
+  @Column({ type: 'varchar' })
   notes!: string;
 
   @Column({ type: 'timestamp' })
   startDateTime!: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  endDateTime?: Date;
+  endDateTime!: Date | null;
 
   @ManyToMany(
     () => AppointmentReasonEntity,
@@ -34,7 +34,7 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
   @JoinColumn({ name: 'oncology_center_id' })
   oncologyCenter!: OncologyCenterEntity;
 
-  @OneToOne(
+  @ManyToOne(
     () => PatientEntity,
     patient => patient.appointment,
     { eager: true, nullable: false, cascade: true }
@@ -42,7 +42,7 @@ export class AppointmentEntity extends AbstractEntity<AppointmentDto> {
   @JoinColumn({ name: 'patient_id' })
   patient!: PatientEntity;
 
-  @OneToOne(
+  @ManyToOne(
     () => PhysicianEntity,
     physician => physician.appointments,
     { eager: true, nullable: false, cascade: true }

@@ -1,16 +1,18 @@
+import { ValidateIf } from 'class-validator';
 import { DateFieldOptional, StringFieldOptional, UUIDFieldOptional } from '../../../decorators/field.decorators';
 
 export class UpdateAppointmentDto {
+  @ValidateIf((a) => a.notes !== '')
   @StringFieldOptional()
   notes?: string;
 
   @DateFieldOptional()
-  startDateTime!: Date;
+  startDateTime?: Date;
 
-  @DateFieldOptional()
-  endDateTime?: Date;
+  @DateFieldOptional({ nullable: true })
+  endDateTime?: Date | null;
 
-  @UUIDFieldOptional()
+  @UUIDFieldOptional({ each: true, minLength: 1 })
   reasonsIds!: Uuid[];
 
   @UUIDFieldOptional()
