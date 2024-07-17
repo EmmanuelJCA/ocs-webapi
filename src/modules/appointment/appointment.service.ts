@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentEntity } from './entities/appointment.entity';
 import { In, Repository } from 'typeorm';
@@ -9,6 +9,7 @@ import { PhysicianService } from '../physician/physician.service';
 import { OncologyCenterService } from '../oncology-center/oncology-center.service';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
 import { AppointmentReasonEntity } from './entities/appointment-reason.entity';
+import { DiagnosticService } from '../diagnostic/diagnostic.service';
 
 @Injectable()
 export class AppointmentService {
@@ -20,6 +21,8 @@ export class AppointmentService {
     private patientService: PatientService,
     private physicianService: PhysicianService,
     private oncologyCenterService: OncologyCenterService,
+    @Inject(forwardRef(() => DiagnosticService))
+    private diagnosticService: DiagnosticService
   ) {}
 
   async create(
@@ -91,7 +94,7 @@ export class AppointmentService {
   @Transactional()
   async update(
     id: Uuid,
-    { physicianId, reasonsIds, oncologyCenterId, patientId, ...appointmentUpdated }: UpdateAppointmentDto
+    { physicianId, reasonsIds, oncologyCenterId, patientId, monitoredDiagnosticsIds, ...appointmentUpdated }: UpdateAppointmentDto
   ): Promise<AppointmentEntity> {
     const appointmentEntity = await this.findOne(id);
 
@@ -105,6 +108,11 @@ export class AppointmentService {
     if (physicianId) {
       const physicianEntity = await this.physicianService.findOne(physicianId);
       appointment.physician = physicianEntity;
+    }
+
+    if(monitoredDiagnosticsIds) {
+      const monitoredDiagnostics = await this.diagnosticService.findAllByIds(monitoredDiagnosticsIds);
+      appointment.monitoredDiagnostics = monitoredDiagnostics;
     }
 
     if(!appointment.physician.user.oncologyCenters.find(oc => oc.id === appointment.oncologyCenter.id)) {

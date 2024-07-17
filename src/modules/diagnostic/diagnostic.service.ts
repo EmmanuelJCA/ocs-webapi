@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiagnosticEntity } from './entities/diagnostic.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AppointmentService } from '../appointment/appointment.service';
 import { CancerService } from '../cancer/cancer.service';
 import { CreateDiagnosticDto } from './dtos/create-diagnostic.dto';
@@ -12,6 +12,7 @@ export class DiagnosticService {
   constructor(
     @InjectRepository(DiagnosticEntity)
     private diagnosticRepository: Repository<DiagnosticEntity>,
+    @Inject(forwardRef(() => AppointmentService))
     private appointmentService: AppointmentService,
     private cancerService: CancerService,
   ) {}
@@ -43,8 +44,16 @@ export class DiagnosticService {
     return diagnosticEntity;
   }
 
-  async findAll(): Promise<DiagnosticEntity[]> {
-    return this.diagnosticRepository.find();
+  async findAll(patientId: Uuid | undefined): Promise<DiagnosticEntity[]> {
+    return this.diagnosticRepository.find({
+      ...(patientId
+          ? { where: { appointment: { patient: { id: patientId } } }}
+          : {}
+    )});
+  }
+
+  async findAllByIds(ids: Uuid[]): Promise<DiagnosticEntity[]> {
+    return this.diagnosticRepository.findBy({ id: In(ids) });
   }
 
   async update(

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { Auth, UUIDParam } from '../../decorators/http.decorators';
 import { DiagnosticService } from './diagnostic.service';
@@ -30,8 +30,8 @@ export class DiagnosticController {
     description: 'Get diagnostics list',
     type: [DiagnosticDto],
   })
-  async getDiagnostics(): Promise<DiagnosticDto[]> {
-    const diagnosticEntity = await this.diagnosticService.findAll();
+  async getDiagnostics(@Query('patientId', new ParseUUIDPipe({ version: '4', optional: true })) patientId?: Uuid): Promise<DiagnosticDto[]> {
+    const diagnosticEntity = await this.diagnosticService.findAll(patientId);
 
     return diagnosticEntity.toDtos();
   }
@@ -50,7 +50,7 @@ export class DiagnosticController {
     return diagnosticEntity.toDto();
   }
 
-  @Put()
+  @Put(':id')
   @Auth([])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: DiagnosticDto, description: 'Successfully Registered' })

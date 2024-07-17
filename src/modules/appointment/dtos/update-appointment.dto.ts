@@ -15,6 +15,9 @@ export class UpdateAppointmentDto {
   @UUIDFieldOptional({ each: true, minLength: 1 })
   reasonsIds!: Uuid[];
 
+  @UUIDFieldOptional({ each: true })
+  monitoredDiagnosticsIds!: Uuid[];
+
   @UUIDFieldOptional()
   physicianId!: Uuid;
 
