@@ -1,23 +1,18 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { ClassField, StringField } from '../../../decorators/field.decorators';
 import { RecipeEntity } from '../entities/recipe.entity';
-import { SuppliesEntity } from '../../supplies/entities/supplies.entity';
-import { TreatmentSessionDto } from '../../treatment/dtos/treatment-session.dto';
+import { RecipeSuppliesDto } from './recipe-supplies.dto';
 
 export class RecipeDto extends AbstractDto {
   @StringField()
   instructions!: string;
 
-  @ClassField(() => SuppliesEntity, { each: true } )
-  supplies: SuppliesEntity[];
+  @ClassField(() => RecipeSuppliesDto, { each: true } )
+  supplies: RecipeSuppliesDto[];
 
-  @ClassField(() => TreatmentSessionDto, { each: true })
-  sessions: TreatmentSessionDto[];
-
-  constructor(treatmentType: RecipeEntity) {
-    super(treatmentType);
-    this.instructions = treatmentType.instructions;
-    this.supplies = treatmentType.supplies;
-    this.sessions = treatmentType.treatmentSessions.toDtos();
+  constructor(recipe: RecipeEntity) {
+    super(recipe);
+    this.instructions = recipe.instructions;
+    this.supplies = recipe.recipeSupplies.toDtos();
   }
 }

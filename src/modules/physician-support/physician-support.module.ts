@@ -9,7 +9,7 @@ import { PhysicianSupportSpecializationEntity } from './entities/physician-suppo
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhysicianSupportEntity, PhysicianSupportSpecializationEntity]), UserModule],
-  exports: [],
+  exports: [PhysicianSupportService],
   providers: [PhysicianSupportService],
   controllers: [PhysicianSupportController, PhysicianSupportSpecializationController],
 })

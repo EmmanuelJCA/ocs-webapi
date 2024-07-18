@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SuppliesEntity } from './entities/supplies.entity';
 import { MeasurementUnitEntity } from './entities/measurement-unit.entity';
 import { CreateSuppliesDto } from './dtos/create-supplies.dto';
@@ -34,6 +34,10 @@ export class SuppliesService {
       .leftJoinAndSelect('supplies.treatmentTypes', 'treatmentTypes')
       .leftJoinAndSelect('supplies.measurementUnit', 'measurementUnit')
       .getMany();
+  }
+
+  async findAllByIds(suppliesIds: Uuid[]): Promise<SuppliesEntity[]> {
+    return this.suppliesRepository.findBy({id: In(suppliesIds)})
   }
 
   async findAllMeasurementUnits() {

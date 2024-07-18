@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OncologyCenterModule } from '../oncology-center/oncology-center.module';
@@ -11,9 +11,9 @@ import { MeasurementUnitEntity } from './entities/measurement-unit.entity';
 import { TreatmentModule } from '../treatment/treatment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SuppliesEntity, MeasurementUnitEntity]), PersonModule, OncologyCenterModule, TreatmentModule],
+  imports: [TypeOrmModule.forFeature([SuppliesEntity, MeasurementUnitEntity]), PersonModule, OncologyCenterModule, forwardRef(() => TreatmentModule)],
   controllers: [SuppliesController, MeasurementUnitController],
-  exports: [],
+  exports: [SuppliesService],
   providers: [SuppliesService],
 })
 export class SuppliesModule {}

@@ -1,10 +1,10 @@
 import { TreatmentTypeEntity } from './../../treatment/entities/treatment-type.entity';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { UseDto } from '../../../decorators/use-dto.decorator';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { MeasurementUnitEntity } from './measurement-unit.entity';
 import { SuppliesDto } from '../dtos/supplies.dto';
-import { RecipeEntity } from '../../recipe/entities/recipe.entity';
+import { RecipeSuppliesEntity } from '../../recipe/entities/recipe-supplies.entity';
 
 @Entity({ name: 'supplies' })
 @UseDto(SuppliesDto)
@@ -36,9 +36,6 @@ export class SuppliesEntity extends AbstractEntity<SuppliesDto> {
   @JoinColumn({ name: 'measurement_unit_id' })
   measurementUnit!: MeasurementUnitEntity;
 
-  @ManyToMany(
-    () => RecipeEntity,
-    recipe => recipe.supplies
-  )
-  recipes!: RecipeEntity[];
+  @OneToMany(() => RecipeSuppliesEntity, (recipeSupplies) => recipeSupplies.supplies)
+  recipeSupplies!: RecipeSuppliesEntity[];
 }
