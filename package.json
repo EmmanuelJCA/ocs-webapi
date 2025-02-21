@@ -8,7 +8,7 @@
   "scripts": {
     "build:prod": "tsc -p tsconfig.build.json",
     "start:dev": "ts-node src/main.ts",
-    "start:prod": "node dist/main.js",
+    "start:prod": "node dist/main",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "yarn run typeorm migration:generate -d ormconfig",
     "migration:run": "yarn run typeorm migration:run -- -d ormconfig",
