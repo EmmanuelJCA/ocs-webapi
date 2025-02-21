@@ -1,9 +1,11 @@
-import { DateField, EnumField, StringField, UUIDField } from '../../../decorators/field.decorators';
+import { DateField, EnumField, StringFieldOptional, UUIDField } from '../../../decorators/field.decorators';
 import { TreatmentResult } from '../../../constants/treatment-result';
+import { ValidateIf } from 'class-validator';
 
 export class CreateTreatmentDto {
-  @StringField()
-  instructions!: string;
+  @ValidateIf((a) => a.instructions !== '')
+  @StringFieldOptional()
+  instructions?: string = '';
 
   @DateField()
   startDateTime!: Date;
@@ -14,8 +16,9 @@ export class CreateTreatmentDto {
   @EnumField(() => TreatmentResult, { nullable: true })
   result!: TreatmentResult | null;
 
-  @StringField({ nullable: true })
-  resultNotes!: string | null;
+  @ValidateIf((a) => a.resultNotes !== '')
+  @StringFieldOptional({ nullable: true })
+  resultNotes?: string | null = '';
 
   @UUIDField()
   treatmentTypeId!: Uuid;

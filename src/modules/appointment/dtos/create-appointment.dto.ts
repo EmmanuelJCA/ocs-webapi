@@ -4,7 +4,7 @@ import { DateField, StringFieldOptional, UUIDField } from '../../../decorators/f
 export class CreateAppointmentDto {
   @ValidateIf((a) => a.notes !== '')
   @StringFieldOptional()
-  notes?: string;
+  notes?: string = '';
 
   @DateField()
   startDateTime!: Date;

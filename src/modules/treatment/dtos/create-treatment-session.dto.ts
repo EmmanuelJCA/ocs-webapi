@@ -1,9 +1,11 @@
-import { ClassFieldOptional, DateField, StringField, UUIDField } from '../../../decorators/field.decorators';
+import { ValidateIf } from 'class-validator';
+import { ClassFieldOptional, DateField, StringFieldOptional, UUIDField } from '../../../decorators/field.decorators';
 import { CreateRecipeDto } from '../../recipe/dtos/create-recipe.dto';
 
 export class CreateTreatmentSessionDto {
-  @StringField()
-  instructions!: string;
+  @ValidateIf((a) => a.instructions !== '')
+  @StringFieldOptional()
+  instructions?: string = '';
 
   @DateField()
   startDateTime!: Date;
@@ -11,8 +13,9 @@ export class CreateTreatmentSessionDto {
   @DateField({ nullable: true })
   endDateTime!: Date | null;
 
-  @StringField()
-  observations!: string;
+  @ValidateIf((a) => a.observations !== '')
+  @StringFieldOptional()
+  observations?: string = '';
 
   @UUIDField()
   physicianSupportId!: Uuid;
