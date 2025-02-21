@@ -42,7 +42,7 @@ export class ApiConfigService {
       throw new Error(`${key} environment variable is not a valid duration`);
     }
 
-    return duration;
+    return duration ?? 60;
   }
 
   private getBoolean(key: string): boolean {
